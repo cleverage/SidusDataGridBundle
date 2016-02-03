@@ -1,0 +1,20 @@
+{% block sidus_link_widget %}
+    {% spaceless %}
+        {% if label is empty %}
+            {%- if label_format is defined and label_format is not empty -%}
+                {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+                }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {% endif %}
+        <a href="{{ path(route, route_parameters) }}" {{ block('button_attributes') }}>
+            {% if icon is not empty %}
+                <i class="fa fa-{{ icon }}"></i>
+            {% endif %}
+            {{ label|trans({}, translation_domain) }}
+        </a>
+    {% endspaceless %}
+{% endblock %}
