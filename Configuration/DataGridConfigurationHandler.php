@@ -38,4 +38,14 @@ class DataGridConfigurationHandler
         }
         return $this->dataGrids[$code];
     }
+
+    /**
+     * @param string $code
+     * @return bool
+     * @throws UnexpectedValueException
+     */
+    public function hasDataGrid($code)
+    {
+        return isset($this->dataGrids[$code]);
+    }
 }

@@ -1,11 +1,13 @@
 {% macro render(datagrid) %}
-    {% set form = datagrid.form %}
+    {% set form = datagrid.formView %}
 
     {% form_theme form datagrid.formTheme %}
     {{ form_start(form) }}
-        {{ form_widget(form.filters) }}
-        {{ _self.filter_actions(datagrid) }}
-        <hr class="clear">
+        {% if form.filters|length > 0 %}
+            {{ form_widget(form.filters) }}
+            {{ _self.filter_actions(datagrid) }}
+            <hr class="clear">
+        {% endif %}
         {% block datagrid_actions %}
             {{ _self.actions(datagrid) }}
         {% endblock %}
@@ -20,10 +22,8 @@
 
 {% macro filter_actions(datagrid) %}
     <div class="btn-group pull-right">
-        <a href="{{ datagrid.form.vars.attr.action is defined ? datagrid.form.vars.attr.action : '?' }}" class="btn btn-default">
-            <i class="fa fa-times"></i> {{ 'sidus.datagrid.reset.label'|trans() }}
-        </a>
-        <button type="submit" class="btn btn-primary"><i class="fa fa-filter"></i> {{ 'sidus.datagrid.filter.label'|trans() }}</button>
+        {{ form_widget(datagrid.formView.filterResetButton) }}
+        {{ form_widget(datagrid.formView.filterSubmitButton) }}
     </div>
 {% endmacro %}
 
@@ -33,15 +33,13 @@
             {{ pagerfanta(datagrid.filterConfig.pager, 'twitter_bootstrap3') }}
         </div>
         <div class="btn-group">
-            <a href="#todo" class="btn btn-primary" data-target="tg_right">
-                <i class="fa fa-plus"></i> {{ 'sidus.datagrid.create.label'|trans() }}
-            </a>
+            {{ form_widget(datagrid.formView.actions) }}
         </div>
     </div>
 {% endmacro %}
 
 {% macro table(datagrid) %}
-    {% set sort = datagrid.form.sortable %}
+    {% set sort = datagrid.formView.sortable %}
     <table class="table table-striped">
         <caption>{{ datagrid.filterConfig.pager.count }} results</caption>
         <thead>

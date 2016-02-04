@@ -180,7 +180,7 @@ class Column implements Renderable
     public function getLabel()
     {
         if (!$this->label) {
-            return "sidus.datagrid.{$this->getCode()}.label";
+            return ucfirst(trim(strtolower(preg_replace(array('/([A-Z])/', '/[_\s]+/'), array('_$1', ' '), $this->getCode()))));
         }
         return $this->label;
     }

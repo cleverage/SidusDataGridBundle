@@ -10,11 +10,18 @@
                 {% set label = name|humanize %}
             {%- endif -%}
         {% endif %}
-        <a href="{{ path(route, route_parameters) }}" {{ block('button_attributes') }}>
+        {% if not uri %}
+            {% set uri = path(route, route_parameters) %}
+        {% endif %}
+        <a href="{{ uri }}" {{ block('button_attributes') }}>
             {% if icon is not empty %}
                 <i class="fa fa-{{ icon }}"></i>
             {% endif %}
             {{ label|trans({}, translation_domain) }}
         </a>
     {% endspaceless %}
+{% endblock %}
+
+{% block sidus_link_row %}
+    {{ block('sidus_link_widget') }}
 {% endblock %}

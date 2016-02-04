@@ -60,12 +60,12 @@ class TwigRenderer extends Twig_Extension implements Renderable
             if (!empty($options['date_format'])) {
                 return $value->format($options['date_format']);
             }
-            $dateType = IntlDateFormatter::NONE;
-            $timeType = IntlDateFormatter::NONE;
-            if (array_key_exists('date_type', $options) && $options['date_type'] !== null) {
+            $dateType = IntlDateFormatter::MEDIUM;
+            $timeType = IntlDateFormatter::MEDIUM;
+            if (array_key_exists('date_type', $options) && $options['date_type'] !== null && $options['date_type'] !== '') {
                 $dateType = $options['date_type'];
             }
-            if (array_key_exists('time_type', $options) && $options['time_type'] !== null) {
+            if (array_key_exists('time_type', $options) && $options['time_type'] !== null && $options['time_type'] !== '') {
                 $dateType = $options['time_type'];
             }
             $dateFormatter = new IntlDateFormatter($this->translator->getLocale(), $dateType, $timeType);
