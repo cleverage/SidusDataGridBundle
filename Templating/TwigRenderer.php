@@ -3,8 +3,8 @@
 namespace Sidus\DataGridBundle\Templating;
 
 use Sidus\DataGridBundle\Model\Column;
-use Symfony\Component\Intl\DateFormatter\IntlDateFormatter;
-use Symfony\Component\Intl\NumberFormatter\NumberFormatter;
+use IntlDateFormatter;
+use NumberFormatter;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;

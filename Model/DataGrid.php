@@ -52,14 +52,16 @@ class DataGrid
     public function __construct($code, array $configuration)
     {
         $this->code = $code;
-        foreach ($configuration['columns'] as $key => $columnConfiguration) {
-            $this->columns[] = new Column($key, $this, $columnConfiguration);
-        }
+        $columns = $configuration['columns'];
         unset($configuration['columns']);
 
         $accessor = PropertyAccess::createPropertyAccessor();
         foreach ($configuration as $key => $option) {
             $accessor->setValue($this, $key, $option);
+        }
+
+        foreach ($columns as $key => $columnConfiguration) {
+            $this->createColumn($key, $columnConfiguration);
         }
     }
 
@@ -370,5 +372,15 @@ class DataGrid
         $this->setAction($action, array_merge($this->getAction($action), [
             'route_parameters' => $parameters,
         ]));
+    }
+
+    /**
+     * @param string $key
+     * @param array $columnConfiguration
+     * @throws \Exception
+     */
+    protected function createColumn($key, array $columnConfiguration)
+    {
+        $this->columns[] = new Column($key, $this, $columnConfiguration);
     }
 }
