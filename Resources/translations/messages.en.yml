@@ -1,0 +1,11 @@
+sidus:
+    datagrid:
+        reset:
+            label: Reset
+        submit:
+            label: Submit
+        results:
+            label: results
+        boolean:
+            yes: Yes
+            no: No

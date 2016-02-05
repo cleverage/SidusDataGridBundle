@@ -41,7 +41,7 @@
 {% macro table(datagrid) %}
     {% set sort = datagrid.formView.sortable %}
     <table class="table table-striped">
-        <caption>{{ datagrid.filterConfig.pager.count }} results</caption>
+        <caption>{{ datagrid.filterConfig.pager.count }} {{ 'sidus.datagrid.results.label'|trans }}</caption>
         <thead>
         <tr>
             {% for column in datagrid.columns %}

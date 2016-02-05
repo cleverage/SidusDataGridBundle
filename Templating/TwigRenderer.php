@@ -97,7 +97,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
             return $value($options);
         }
         if (is_bool($value)) {
-            return $value ? 'sidus.datagrid.boolean.yes' : 'sidus.datagrid.boolean.no';
+            return $this->translator->trans($value ? 'sidus.datagrid.boolean.yes' : 'sidus.datagrid.boolean.no');
         }
         return $value;
     }
