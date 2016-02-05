@@ -18,7 +18,6 @@
     "psr-0": { "Sidus\\DataGridBundle": "" }
   },
   "require": {
-    "php": ">=5.4",
     "sidus/filter-bundle": "dev-master"
   }
 }
