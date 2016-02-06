@@ -2,6 +2,7 @@
 
 namespace Sidus\DataGridBundle\Templating;
 
+use Doctrine\Common\Collections\Collection;
 use Sidus\DataGridBundle\Model\Column;
 use IntlDateFormatter;
 use NumberFormatter;
@@ -61,7 +62,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
                 return $value->format($options['date_format']);
             }
             $dateType = IntlDateFormatter::MEDIUM;
-            $timeType = IntlDateFormatter::MEDIUM;
+            $timeType = IntlDateFormatter::SHORT;
             if (array_key_exists('date_type', $options) && $options['date_type'] !== null && $options['date_type'] !== '') {
                 $dateType = $options['date_type'];
             }
@@ -86,12 +87,16 @@ class TwigRenderer extends Twig_Extension implements Renderable
             $numberFormatter = new NumberFormatter($this->translator->getLocale());
             return $numberFormatter->format($value);
         }
-        if (is_array($value)) {
+        if (is_array($value) || $value instanceof \Traversable) {
+            $items = [];
+            foreach ($value as $item) {
+                $items[] = $this->renderValue($item, $options);
+            }
             $glue = ', ';
             if (!empty($options['array_glue'])) {
                 $glue = $options['array_glue'];
             }
-            return implode($glue, $value);
+            return implode($glue, $items);
         }
         if (is_callable($value)) {
             return $value($options);
