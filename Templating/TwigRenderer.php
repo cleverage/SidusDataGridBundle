@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\Collection;
 use Sidus\DataGridBundle\Model\Column;
 use IntlDateFormatter;
 use NumberFormatter;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
@@ -45,8 +46,12 @@ class TwigRenderer extends Twig_Extension implements Renderable
     public function renderObjectValue($object, Column $column, array $options = [])
     {
         $accessor = PropertyAccess::createPropertyAccessor();
-        $value = $accessor->getValue($object, $column->getPropertyPath());
-        return $column->renderValue($value, $options);
+        try {
+            $value = $accessor->getValue($object, $column->getPropertyPath());
+            return $column->renderValue($value, $options);
+        } catch (UnexpectedTypeException $e) {
+            return false;
+        }
     }
 
     /**
