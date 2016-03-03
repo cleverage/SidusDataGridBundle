@@ -39,8 +39,6 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('default_renderer')->defaultValue(new Reference('sidus_data_grid.renderer.twig'))->end()
                 ->append($this->getDataGridConfigTreeBuilder())
                 ->variableNode('actions')->defaultValue([])->end()
-                ->variableNode('submit_button')->defaultValue([])->end()
-                ->variableNode('reset_button')->defaultValue([])->end()
             ->end();
 
         return $treeBuilder;
@@ -79,6 +77,8 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('parent')->defaultNull()->end()
             ->scalarNode('renderer')->defaultNull()->end()
             ->variableNode('actions')->end()
+            ->variableNode('submit_button')->defaultValue([])->end()
+            ->variableNode('reset_button')->defaultValue([])->end()
             ->arrayNode('columns')
                 ->prototype('array')
                     ->children()

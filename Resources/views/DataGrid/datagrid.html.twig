@@ -1,18 +1,18 @@
-{% macro render(datagrid) %}
+{% macro render(datagrid, viewParameters) %}
     {% set form = datagrid.formView %}
 
     {% form_theme form datagrid.formTheme %}
     {{ form_start(form) }}
         {% if form.filters|length > 0 %}
             {{ form_widget(form.filters) }}
-            {{ _self.filter_actions(datagrid) }}
+            {{ _self.filter_actions(datagrid, viewParameters) }}
             <hr class="clear">
         {% endif %}
         {% block datagrid_actions %}
-            {{ _self.actions(datagrid) }}
+            {{ _self.actions(datagrid, viewParameters) }}
         {% endblock %}
 
-        {{ _self.table(datagrid) }}
+        {{ _self.table(datagrid, viewParameters) }}
 
         {% if datagrid.filterConfig.pager.count > 10 %}
             {{ block('datagrid_actions') }}
@@ -20,14 +20,14 @@
     {{ form_end(form) }}
 {% endmacro %}
 
-{% macro filter_actions(datagrid) %}
+{% macro filter_actions(datagrid, viewParameters) %}
     <div class="btn-group pull-right">
         {{ form_widget(datagrid.formView.filterResetButton) }}
         {{ form_widget(datagrid.formView.filterSubmitButton) }}
     </div>
 {% endmacro %}
 
-{% macro actions(datagrid) %}
+{% macro actions(datagrid, viewParameters) %}
     <div class="datagrid-actions">
         <div class="pull-right">
             {{ pagerfanta(datagrid.filterConfig.pager, 'twitter_bootstrap3') }}
@@ -38,7 +38,7 @@
     </div>
 {% endmacro %}
 
-{% macro table(datagrid) %}
+{% macro table(datagrid, viewParameters) %}
     {% set sort = datagrid.formView.sortable %}
     <table class="table table-striped">
         <caption>{{ datagrid.filterConfig.pager.count }} {{ 'sidus.datagrid.results.label'|trans }}</caption>

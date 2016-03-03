@@ -301,14 +301,13 @@ class DataGrid
     protected function buildResetAction(FormBuilder $builder)
     {
         $action = $builder->getOption('action');
-        $optionResolver = new OptionsResolver();
-        $optionResolver->setDefaults([
+        $defaults = [
             'form_type' => 'sidus_link',
             'label' => 'sidus.datagrid.reset.label',
             'uri' => $action ?: '?',
             'icon' => 'close',
-        ]);
-        $options = $optionResolver->resolve($this->getResetButton());
+        ];
+        $options = array_merge($defaults, $this->getResetButton());
         $type = $options['form_type'];
         unset($options['form_type']);
         $builder->add('filterResetButton', $type, $options);
@@ -320,16 +319,15 @@ class DataGrid
      */
     protected function buildSubmitAction(FormBuilder $builder)
     {
-        $optionResolver = new OptionsResolver();
-        $optionResolver->setDefaults([
+        $defaults = [
             'form_type' => 'submit',
             'label' => 'sidus.datagrid.submit.label',
             'icon' => 'filter',
             'attr' => [
                 'class' => 'btn-primary',
             ],
-        ]);
-        $options = $optionResolver->resolve($this->getSubmitButton());
+        ];
+        $options = array_merge($defaults, $this->getSubmitButton());
         $type = $options['form_type'];
         unset($options['form_type']);
         $builder->add('filterSubmitButton', $type, $options);
