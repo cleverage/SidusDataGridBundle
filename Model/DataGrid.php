@@ -174,12 +174,25 @@ class DataGrid
     }
 
     /**
-     * @param $action
+     * @param string $action
      * @return array
+     * @throws \UnexpectedValueException
      */
     public function getAction($action)
     {
+        if (!$this->hasAction($action)) {
+            throw new \UnexpectedValueException("No action with code: '{$action}'");
+        }
         return $this->actions[$action];
+    }
+
+    /**
+     * @param string $action
+     * @return bool
+     */
+    public function hasAction($action)
+    {
+        return array_key_exists($action, $this->actions);
     }
 
     /**
