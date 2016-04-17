@@ -2,7 +2,6 @@
 
 namespace Sidus\DataGridBundle\Templating;
 
-use Doctrine\Common\Collections\Collection;
 use Sidus\DataGridBundle\Model\Column;
 use IntlDateFormatter;
 use NumberFormatter;
