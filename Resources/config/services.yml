@@ -10,7 +10,7 @@ services:
 
     sidus_data_grid.renderer.twig:
         class: '%sidus_data_grid.renderer.twig.class%'
-        arguments: ['@translator']
+        arguments: ['@translator', '@property_accessor']
         tags:
             - { name: twig.extension }
 
