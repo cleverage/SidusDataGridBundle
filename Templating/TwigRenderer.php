@@ -6,7 +6,6 @@ use Sidus\DataGridBundle\Model\Column;
 use IntlDateFormatter;
 use NumberFormatter;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;

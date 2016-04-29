@@ -78,7 +78,7 @@ class SidusDataGridExtension extends Extension
         // Allow either a service or a direct configuration for filters
         if (is_array($dataGridConfiguration['filter_config'])) {
             $dataGridConfiguration['filter_config'] = $this->addFilterConfiguration($code, $dataGridConfiguration, $container);
-        } elseif (substr($dataGridConfiguration['filter_config'], 0, 1) === '@') {
+        } elseif (0 === strpos($dataGridConfiguration['filter_config'], '@')) {
             $dataGridConfiguration['filter_config'] = new Reference(ltrim($dataGridConfiguration['filter_config'], '@'));
         } else {
             throw new UnexpectedValueException('filter_config option must be either a service or a valid filter configuration');
