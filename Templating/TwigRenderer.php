@@ -2,9 +2,9 @@
 
 namespace Sidus\DataGridBundle\Templating;
 
-use Sidus\DataGridBundle\Model\Column;
 use IntlDateFormatter;
 use NumberFormatter;
+use Sidus\DataGridBundle\Model\Column;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -20,7 +20,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
     protected $accessor;
 
     /**
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface       $translator
      * @param PropertyAccessorInterface $accessor
      */
     public function __construct(TranslatorInterface $translator, PropertyAccessorInterface $accessor)
@@ -41,9 +41,9 @@ class TwigRenderer extends Twig_Extension implements Renderable
     }
 
     /**
-     * @param $object
+     * @param mixed  $object
      * @param Column $column
-     * @param array $options
+     * @param array  $options
      * @return string
      * @throws \Exception
      */
@@ -51,6 +51,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
     {
         try {
             $value = $this->accessor->getValue($object, $column->getPropertyPath());
+
             return $column->renderValue($value, $options);
         } catch (UnexpectedTypeException $e) {
             return false;
@@ -71,13 +72,18 @@ class TwigRenderer extends Twig_Extension implements Renderable
             }
             $dateType = IntlDateFormatter::MEDIUM;
             $timeType = IntlDateFormatter::SHORT;
-            if (array_key_exists('date_type', $options) && $options['date_type'] !== null && $options['date_type'] !== '') {
+            if (array_key_exists('date_type', $options)
+                && $options['date_type'] !== null && $options['date_type'] !== ''
+            ) {
                 $dateType = $options['date_type'];
             }
-            if (array_key_exists('time_type', $options) && $options['time_type'] !== null && $options['time_type'] !== '') {
+            if (array_key_exists('time_type', $options)
+                && $options['time_type'] !== null && $options['time_type'] !== ''
+            ) {
                 $dateType = $options['time_type'];
             }
             $dateFormatter = new IntlDateFormatter($this->translator->getLocale(), $dateType, $timeType);
+
             return $dateFormatter->format($value);
         }
         if (is_int($value)) {
@@ -90,9 +96,11 @@ class TwigRenderer extends Twig_Extension implements Renderable
                 $decimals = array_key_exists('decimals', $options) ? $options['decimals'] : 2;
                 $decPoint = array_key_exists('dec_point', $options) ? $options['dec_point'] : '.';
                 $thousandsSep = array_key_exists('thousands_sep', $options) ? $options['thousands_sep'] : ',';
+
                 return number_format($value, $decimals, $decPoint, $thousandsSep);
             }
             $numberFormatter = new NumberFormatter($this->translator->getLocale());
+
             return $numberFormatter->format($value);
         }
         if (is_array($value) || $value instanceof \Traversable) {
@@ -104,6 +112,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
             if (!empty($options['array_glue'])) {
                 $glue = $options['array_glue'];
             }
+
             return implode($glue, $items);
         }
         if (is_callable($value)) {
@@ -112,6 +121,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
         if (is_bool($value)) {
             return $this->translator->trans($value ? 'sidus.datagrid.boolean.yes' : 'sidus.datagrid.boolean.no');
         }
+
         return $value;
     }
 
