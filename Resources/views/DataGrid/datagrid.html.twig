@@ -4,9 +4,13 @@
     {% form_theme form datagrid.formTheme %}
     {{ form_start(form) }}
         {% if form.filters|length > 0 %}
-            {{ form_widget(form.filters) }}
-            {{ _self.filter_actions(datagrid, viewParameters) }}
-            <hr class="clear">
+            <div class="datagrid-filters">
+                <div class="row">
+                    {{ form_widget(form.filters) }}
+                </div>
+                {{ _self.filter_actions(datagrid, viewParameters) }}
+                <hr class="clear">
+            </div>
         {% endif %}
         {% block datagrid_actions %}
             {{ _self.actions(datagrid, viewParameters) }}
@@ -21,7 +25,7 @@
 {% endmacro %}
 
 {% macro filter_actions(datagrid, viewParameters) %}
-    <div class="btn-group pull-right">
+    <div class="datagrid-filters-actions btn-group pull-right">
         {{ form_widget(datagrid.formView.filterResetButton) }}
         {{ form_widget(datagrid.formView.filterSubmitButton) }}
     </div>
