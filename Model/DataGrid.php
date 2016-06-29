@@ -10,6 +10,11 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
+/**
+ * Handle a datagrid configuration
+ *
+ * @author Vincent Chalnot <vincent@sidus.fr>
+ */
 class DataGrid
 {
     /** @var string */
@@ -34,7 +39,7 @@ class DataGrid
     protected $formView;
 
     /** @var array */
-    protected $actions;
+    protected $actions = [];
 
     /** @var array */
     protected $submitButton = [];
@@ -44,8 +49,9 @@ class DataGrid
 
     /**
      * DataGrid constructor.
+     *
      * @param string $code
-     * @param array $configuration
+     * @param array  $configuration
      * @throws \Exception
      */
     public function __construct($code, array $configuration)
@@ -79,6 +85,7 @@ class DataGrid
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -97,6 +104,7 @@ class DataGrid
     public function setFilterConfig(FilterConfigurationHandler $filterConfig)
     {
         $this->filterConfig = $filterConfig;
+
         return $this;
     }
 
@@ -115,6 +123,7 @@ class DataGrid
     public function setFormTheme($formTheme)
     {
         $this->formTheme = $formTheme;
+
         return $this;
     }
 
@@ -133,6 +142,7 @@ class DataGrid
     public function setRenderer(Renderable $renderer)
     {
         $this->renderer = $renderer;
+
         return $this;
     }
 
@@ -151,6 +161,7 @@ class DataGrid
     public function addColumn(Column $column)
     {
         $this->columns[] = $column;
+
         return $this;
     }
 
@@ -161,6 +172,7 @@ class DataGrid
     public function setColumns($columns)
     {
         $this->columns = $columns;
+
         return $this;
     }
 
@@ -182,6 +194,7 @@ class DataGrid
         if (!$this->hasAction($action)) {
             throw new \UnexpectedValueException("No action with code: '{$action}'");
         }
+
         return $this->actions[$action];
     }
 
@@ -196,12 +209,13 @@ class DataGrid
 
     /**
      * @param string $action
-     * @param array $configuration
+     * @param array  $configuration
      * @return DataGrid
      */
     public function setAction($action, array $configuration)
     {
         $this->actions[$action] = $configuration;
+
         return $this;
     }
 
@@ -212,6 +226,7 @@ class DataGrid
     public function setActions(array $actions)
     {
         $this->actions = $actions;
+
         return $this;
     }
 
@@ -230,6 +245,7 @@ class DataGrid
     public function setSubmitButton(array $submitButton)
     {
         $this->submitButton = $submitButton;
+
         return $this;
     }
 
@@ -248,6 +264,7 @@ class DataGrid
     public function setResetButton(array $resetButton)
     {
         $this->resetButton = $resetButton;
+
         return $this;
     }
 
@@ -260,6 +277,7 @@ class DataGrid
         if (!$this->form) {
             throw new \LogicException('You must first call buildForm()');
         }
+
         return $this->form;
     }
 
@@ -268,6 +286,7 @@ class DataGrid
         if (!$this->formView) {
             $this->formView = $this->getForm()->createView();
         }
+
         return $this->formView;
     }
 
@@ -282,6 +301,7 @@ class DataGrid
         $this->buildDataGridActions($builder);
 
         $this->form = $this->getFilterConfig()->buildForm($builder);
+
         return $this->form;
     }
 
@@ -363,7 +383,7 @@ class DataGrid
 
     /**
      * @param string $action
-     * @param array $parameters
+     * @param array  $parameters
      */
     public function setActionParameters($action, array $parameters)
     {
@@ -371,12 +391,14 @@ class DataGrid
             $this->setSubmitButton(array_merge($this->getSubmitButton(), [
                 'route_parameters' => $parameters,
             ]));
+
             return;
         }
         if ($action === 'reset_button') {
             $this->setResetButton(array_merge($this->getResetButton(), [
                 'route_parameters' => $parameters,
             ]));
+
             return;
         }
         $this->setAction($action, array_merge($this->getAction($action), [
@@ -386,7 +408,7 @@ class DataGrid
 
     /**
      * @param string $key
-     * @param array $columnConfiguration
+     * @param array  $columnConfiguration
      * @throws \Exception
      */
     protected function createColumn($key, array $columnConfiguration)
