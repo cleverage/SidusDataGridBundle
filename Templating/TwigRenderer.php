@@ -99,7 +99,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
 
                 return number_format($value, $decimals, $decPoint, $thousandsSep);
             }
-            $numberFormatter = new NumberFormatter($this->translator->getLocale());
+            $numberFormatter = new NumberFormatter($this->translator->getLocale(), NumberFormatter::DECIMAL);
 
             return $numberFormatter->format($value);
         }
