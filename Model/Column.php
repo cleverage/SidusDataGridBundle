@@ -33,9 +33,11 @@ class Column implements Renderable
 
     /**
      * Column constructor.
-     * @param string $code
+     *
+     * @param string   $code
      * @param DataGrid $dataGrid
-     * @param array $options
+     * @param array    $options
+     *
      * @throws \Exception
      */
     public function __construct($code, DataGrid $dataGrid, array $options = [])
@@ -59,11 +61,13 @@ class Column implements Renderable
 
     /**
      * @param string $code
+     *
      * @return Column
      */
     public function setCode($code)
     {
         $this->code = $code;
+
         return $this;
     }
 
@@ -85,11 +89,13 @@ class Column implements Renderable
 
     /**
      * @param string $template
+     *
      * @return Column
      */
     public function setTemplate($template)
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -101,16 +107,19 @@ class Column implements Renderable
         if (!$this->sortColumn) {
             return $this->getCode();
         }
+
         return $this->sortColumn;
     }
 
     /**
      * @param string $sortColumn
+     *
      * @return Column
      */
     public function setSortColumn($sortColumn)
     {
         $this->sortColumn = $sortColumn;
+
         return $this;
     }
 
@@ -122,16 +131,19 @@ class Column implements Renderable
         if (!$this->propertyPath) {
             return $this->getCode();
         }
+
         return $this->propertyPath;
     }
 
     /**
      * @param string $propertyPath
+     *
      * @return Column
      */
     public function setPropertyPath($propertyPath)
     {
         $this->propertyPath = $propertyPath;
+
         return $this;
     }
 
@@ -143,16 +155,19 @@ class Column implements Renderable
         if (!$this->renderer) {
             return $this->getDataGrid()->getRenderer();
         }
+
         return $this->renderer;
     }
 
     /**
      * @param Renderable $renderer
+     *
      * @return Column
      */
     public function setRenderer(Renderable $renderer = null)
     {
         $this->renderer = $renderer;
+
         return $this;
     }
 
@@ -166,11 +181,13 @@ class Column implements Renderable
 
     /**
      * @param array $formattingOptions
+     *
      * @return Column
      */
     public function setFormattingOptions(array $formattingOptions)
     {
         $this->formattingOptions = $formattingOptions;
+
         return $this;
     }
 
@@ -180,24 +197,30 @@ class Column implements Renderable
     public function getLabel()
     {
         if (!$this->label) {
-            return ucfirst(trim(strtolower(preg_replace(array('/([A-Z])/', '/[_\s]+/'), array('_$1', ' '), $this->getCode()))));
+            return ucfirst(
+                trim(strtolower(preg_replace(['/([A-Z])/', '/[_\s]+/'], ['_$1', ' '], $this->getCode())))
+            );
         }
+
         return $this->label;
     }
 
     /**
      * @param string $label
+     *
      * @return Column
      */
     public function setLabel($label)
     {
         $this->label = $label;
+
         return $this;
     }
 
     /**
      * @param mixed $value
      * @param array $options
+     *
      * @return string
      */
     public function renderValue($value, array $options = [])

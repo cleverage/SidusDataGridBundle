@@ -2,8 +2,11 @@
 
 namespace Sidus\DataGridBundle\Model;
 
+use Sidus\DataGridBundle\Form\Type\LinkType;
 use Sidus\DataGridBundle\Templating\Renderable;
 use Sidus\FilterBundle\Configuration\FilterConfigurationHandler;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormView;
@@ -52,11 +55,13 @@ class DataGrid
      *
      * @param string $code
      * @param array  $configuration
+     *
      * @throws \Exception
      */
     public function __construct($code, array $configuration)
     {
         $this->code = $code;
+        /** @var array $columns */
         $columns = $configuration['columns'];
         unset($configuration['columns']);
 
@@ -80,6 +85,7 @@ class DataGrid
 
     /**
      * @param string $code
+     *
      * @return DataGrid
      */
     public function setCode($code)
@@ -99,6 +105,7 @@ class DataGrid
 
     /**
      * @param FilterConfigurationHandler $filterConfig
+     *
      * @return DataGrid
      */
     public function setFilterConfig(FilterConfigurationHandler $filterConfig)
@@ -118,6 +125,7 @@ class DataGrid
 
     /**
      * @param string $formTheme
+     *
      * @return DataGrid
      */
     public function setFormTheme($formTheme)
@@ -137,6 +145,7 @@ class DataGrid
 
     /**
      * @param Renderable $renderer
+     *
      * @return DataGrid
      */
     public function setRenderer(Renderable $renderer)
@@ -156,6 +165,7 @@ class DataGrid
 
     /**
      * @param Column $column
+     *
      * @return DataGrid
      */
     public function addColumn(Column $column)
@@ -167,6 +177,7 @@ class DataGrid
 
     /**
      * @param Column[] $columns
+     *
      * @return DataGrid
      */
     public function setColumns($columns)
@@ -186,6 +197,7 @@ class DataGrid
 
     /**
      * @param string $action
+     *
      * @return array
      * @throws \UnexpectedValueException
      */
@@ -200,6 +212,7 @@ class DataGrid
 
     /**
      * @param string $action
+     *
      * @return bool
      */
     public function hasAction($action)
@@ -210,6 +223,7 @@ class DataGrid
     /**
      * @param string $action
      * @param array  $configuration
+     *
      * @return DataGrid
      */
     public function setAction($action, array $configuration)
@@ -221,6 +235,7 @@ class DataGrid
 
     /**
      * @param array $actions
+     *
      * @return DataGrid
      */
     public function setActions(array $actions)
@@ -240,6 +255,7 @@ class DataGrid
 
     /**
      * @param array $submitButton
+     *
      * @return DataGrid
      */
     public function setSubmitButton(array $submitButton)
@@ -259,6 +275,7 @@ class DataGrid
 
     /**
      * @param array $resetButton
+     *
      * @return DataGrid
      */
     public function setResetButton(array $resetButton)
@@ -269,8 +286,9 @@ class DataGrid
     }
 
     /**
-     * @return Form
      * @throws \LogicException
+     *
+     * @return Form
      */
     public function getForm()
     {
@@ -281,6 +299,11 @@ class DataGrid
         return $this->form;
     }
 
+    /**
+     * @throws \LogicException
+     *
+     * @return FormView
+     */
     public function getFormView()
     {
         if (!$this->formView) {
@@ -292,6 +315,7 @@ class DataGrid
 
     /**
      * @param FormBuilder $builder
+     *
      * @return $this
      * @throws \Exception
      */
@@ -307,6 +331,7 @@ class DataGrid
 
     /**
      * @param Request $request
+     *
      * @throws \Exception
      */
     public function handleRequest(Request $request)
@@ -315,7 +340,51 @@ class DataGrid
     }
 
     /**
+     * @param string $action
+     * @param array  $parameters
+     *
+     * @throws \UnexpectedValueException
+     */
+    public function setActionParameters($action, array $parameters)
+    {
+        if ($action === 'submit_button') {
+            $this->setSubmitButton(
+                array_merge(
+                    $this->getSubmitButton(),
+                    [
+                        'route_parameters' => $parameters,
+                    ]
+                )
+            );
+
+            return;
+        }
+        if ($action === 'reset_button') {
+            $this->setResetButton(
+                array_merge(
+                    $this->getResetButton(),
+                    [
+                        'route_parameters' => $parameters,
+                    ]
+                )
+            );
+
+            return;
+        }
+        $this->setAction(
+            $action,
+            array_merge(
+                $this->getAction($action),
+                [
+                    'route_parameters' => $parameters,
+                ]
+            )
+        );
+    }
+
+    /**
      * @param FormBuilder $builder
+     *
      * @throws \Exception
      */
     protected function buildFilterActions(FormBuilder $builder)
@@ -328,13 +397,14 @@ class DataGrid
 
     /**
      * @param FormBuilder $builder
+     *
      * @throws \Exception
      */
     protected function buildResetAction(FormBuilder $builder)
     {
         $action = $builder->getOption('action');
         $defaults = [
-            'form_type' => 'sidus_link',
+            'form_type' => LinkType::class,
             'label' => 'sidus.datagrid.reset.label',
             'uri' => $action ?: '?',
             'icon' => 'close',
@@ -347,12 +417,13 @@ class DataGrid
 
     /**
      * @param FormBuilder $builder
+     *
      * @throws \Exception
      */
     protected function buildSubmitAction(FormBuilder $builder)
     {
         $defaults = [
-            'form_type' => 'submit',
+            'form_type' => SubmitType::class,
             'label' => 'sidus.datagrid.submit.label',
             'icon' => 'filter',
             'attr' => [
@@ -370,11 +441,15 @@ class DataGrid
      */
     protected function buildDataGridActions(FormBuilder $builder)
     {
-        $actionsBuilder = $builder->create('actions', 'form', [
-            'label' => false,
-        ]);
+        $actionsBuilder = $builder->create(
+            'actions',
+            FormType::class,
+            [
+                'label' => false,
+            ]
+        );
         foreach ($this->getActions() as $code => $options) {
-            $type = empty($options['form_type']) ? 'sidus_link' : $options['form_type'];
+            $type = empty($options['form_type']) ? LinkType::class : $options['form_type'];
             unset($options['form_type']);
             $actionsBuilder->add($code, $type, $options);
         }
@@ -382,33 +457,9 @@ class DataGrid
     }
 
     /**
-     * @param string $action
-     * @param array  $parameters
-     */
-    public function setActionParameters($action, array $parameters)
-    {
-        if ($action === 'submit_button') {
-            $this->setSubmitButton(array_merge($this->getSubmitButton(), [
-                'route_parameters' => $parameters,
-            ]));
-
-            return;
-        }
-        if ($action === 'reset_button') {
-            $this->setResetButton(array_merge($this->getResetButton(), [
-                'route_parameters' => $parameters,
-            ]));
-
-            return;
-        }
-        $this->setAction($action, array_merge($this->getAction($action), [
-            'route_parameters' => $parameters,
-        ]));
-    }
-
-    /**
      * @param string $key
      * @param array  $columnConfiguration
+     *
      * @throws \Exception
      */
     protected function createColumn($key, array $columnConfiguration)

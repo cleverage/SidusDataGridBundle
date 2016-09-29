@@ -6,7 +6,12 @@
         {% if form.filters|length > 0 %}
             <div class="datagrid-filters">
                 <div class="row">
-                    {{ form_widget(form.filters) }}
+                    {% for subForm in form.filters %}
+                        {{ form_row(subForm) }}
+                        {% if loop.index % 3 == 0 %}
+                            </div><div class="row">
+                        {% endif %}
+                    {% endfor %}
                 </div>
                 {{ _self.filter_actions(datagrid, viewParameters) }}
                 <hr class="clear">

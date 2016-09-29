@@ -17,4 +17,4 @@ services:
     sidus_data_grid.form.link.type:
         class: '%sidus_data_grid.form.link.type.class%'
         tags:
-            - { name: form.type, alias: sidus_link }
+            - { name: form.type }
