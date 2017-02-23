@@ -11,7 +11,8 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * This is the class that validates and merges configuration from your app/config files
  *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ * To learn more see {@link
+ * http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
  */
 class Configuration implements ConfigurationInterface
 {
@@ -35,10 +36,10 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root($this->root);
         $rootNode
             ->children()
-                ->scalarNode('default_form_theme')->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')->end()
-                ->scalarNode('default_renderer')->defaultValue(new Reference('sidus_data_grid.renderer.twig'))->end()
-                ->append($this->getDataGridConfigTreeBuilder())
-                ->variableNode('actions')->defaultValue([])->end()
+            ->scalarNode('default_form_theme')->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')->end()
+            ->scalarNode('default_renderer')->defaultValue(new Reference('sidus_data_grid.renderer.twig'))->end()
+            ->append($this->getDataGridConfigTreeBuilder())
+            ->variableNode('actions')->defaultValue([])->end()
             ->end();
 
         return $treeBuilder;
@@ -54,15 +55,16 @@ class Configuration implements ConfigurationInterface
         $node = $builder->root('configurations');
         $dataGridDefinition = $node
             ->useAttributeAsKey('code')
-                ->prototype('array')
-                    ->performNoDeepMerging()
-                    ->children();
+            ->prototype('array')
+            ->performNoDeepMerging()
+            ->children();
 
         $this->appendDataGridDefinition($dataGridDefinition);
 
         $dataGridDefinition->end()
-                ->end()
+            ->end()
             ->end();
+
         return $node;
     }
 
@@ -80,16 +82,16 @@ class Configuration implements ConfigurationInterface
             ->variableNode('submit_button')->defaultValue([])->end()
             ->variableNode('reset_button')->defaultValue([])->end()
             ->arrayNode('columns')
-                ->prototype('array')
-                    ->children()
-                        ->scalarNode('template')->defaultNull()->end()
-                        ->scalarNode('sort_column')->defaultNull()->end()
-                        ->scalarNode('property_path')->defaultNull()->end()
-                        ->scalarNode('label')->defaultNull()->end()
-                        ->scalarNode('renderer')->defaultNull()->end()
-                        ->variableNode('formatting_options')->defaultValue([])->end()
-                    ->end()
-                ->end()
+            ->prototype('array')
+            ->children()
+            ->scalarNode('template')->defaultNull()->end()
+            ->scalarNode('sort_column')->defaultNull()->end()
+            ->scalarNode('property_path')->defaultNull()->end()
+            ->scalarNode('label')->defaultNull()->end()
+            ->scalarNode('renderer')->defaultNull()->end()
+            ->variableNode('formatting_options')->defaultValue([])->end()
+            ->end()
+            ->end()
             ->end();
     }
 }

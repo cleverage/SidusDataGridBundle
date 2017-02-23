@@ -1,20 +1,17 @@
 parameters:
     sidus_data_grid.model.datagrid.class: Sidus\DataGridBundle\Model\DataGrid
-    sidus_data_grid.datagrid_configuration.handler.class: Sidus\DataGridBundle\Configuration\DataGridConfigurationHandler
-    sidus_data_grid.renderer.twig.class: Sidus\DataGridBundle\Templating\TwigRenderer
-    sidus_data_grid.form.link.type.class: Sidus\DataGridBundle\Form\Type\LinkType
 
 services:
     sidus_data_grid.datagrid_configuration.handler:
-        class: '%sidus_data_grid.datagrid_configuration.handler.class%'
+        class: Sidus\DataGridBundle\Configuration\DataGridConfigurationHandler
 
     sidus_data_grid.renderer.twig:
-        class: '%sidus_data_grid.renderer.twig.class%'
+        class: Sidus\DataGridBundle\Templating\TwigRenderer
         arguments: ['@translator', '@property_accessor']
         tags:
             - { name: twig.extension }
 
     sidus_data_grid.form.link.type:
-        class: '%sidus_data_grid.form.link.type.class%'
+        class: Sidus\DataGridBundle\Form\Type\LinkType
         tags:
             - { name: form.type }

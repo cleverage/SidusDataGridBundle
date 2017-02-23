@@ -28,6 +28,7 @@ class DataGridConfigurationHandler
 
     /**
      * @param $code
+     *
      * @return DataGrid
      * @throws UnexpectedValueException
      */
@@ -36,11 +37,13 @@ class DataGridConfigurationHandler
         if (empty($this->dataGrids[$code])) {
             throw new UnexpectedValueException("No data-grid with code : {$code}");
         }
+
         return $this->dataGrids[$code];
     }
 
     /**
      * @param string $code
+     *
      * @return bool
      * @throws UnexpectedValueException
      */

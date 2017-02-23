@@ -1,23 +1,28 @@
 {
-  "name": "sidus/datagrid-bundle",
-  "description": "Extension for sidus/filter-bundle to easily build a full datagrid based on yml configuration",
-  "keywords": [ "datagrid", "sort" ],
-  "homepage": "https://github.com/VincentChalnot/SidusDataGridBundle",
-  "type": "library",
-  "license": "GPL-2.0",
-  "authors": [
-    {
-      "name": "Vincent Chalnot",
-      "email": "vincent@sidus.fr",
-      "homepage": "http://chalnot.fr",
-      "role": "Developer"
+    "name": "sidus/datagrid-bundle",
+    "description": "Extension for sidus/filter-bundle to easily build a full datagrid based on yml configuration",
+    "keywords": [
+        "datagrid",
+        "sort"
+    ],
+    "homepage": "https://github.com/VincentChalnot/SidusDataGridBundle",
+    "type": "library",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Vincent Chalnot",
+            "email": "vincent@sidus.fr",
+            "homepage": "http://chalnot.fr",
+            "role": "Developer"
+        }
+    ],
+    "target-dir": "Sidus/DataGridBundle",
+    "autoload": {
+        "psr-0": {
+            "Sidus\\DataGridBundle": ""
+        }
+    },
+    "require": {
+        "sidus/filter-bundle": "dev-v1.2.x-dev"
     }
-  ],
-  "target-dir": "Sidus/DataGridBundle",
-  "autoload": {
-    "psr-0": { "Sidus\\DataGridBundle": "" }
-  },
-  "require": {
-    "sidus/filter-bundle": "dev-v1.2.x-dev"
-  }
 }

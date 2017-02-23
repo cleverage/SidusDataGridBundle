@@ -13,6 +13,7 @@ class DataGridCompilerPass implements CompilerPassInterface
      * Inject tagged datagrids into configuration handler
      *
      * @param ContainerBuilder $container
+     *
      * @api
      * @throws InvalidArgumentException
      */

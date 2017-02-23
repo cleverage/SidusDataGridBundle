@@ -44,6 +44,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
      * @param mixed  $object
      * @param Column $column
      * @param array  $options
+     *
      * @return string
      * @throws \Exception
      */
@@ -61,6 +62,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
     /**
      * @param mixed $value
      * @param array $options
+     *
      * @return string
      * @throws \Exception
      */

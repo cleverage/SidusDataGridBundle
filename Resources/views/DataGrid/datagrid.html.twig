@@ -1,31 +1,33 @@
 {% macro render(datagrid, viewParameters) %}
+    {% import _self as current %}
     {% set form = datagrid.formView %}
 
     {% form_theme form datagrid.formTheme %}
     {{ form_start(form) }}
-        {% if form.filters|length > 0 %}
-            <div class="datagrid-filters">
-                <div class="row">
-                    {% for subForm in form.filters %}
-                        {{ form_row(subForm) }}
-                        {% if loop.index % 3 == 0 %}
-                            </div><div class="row">
-                        {% endif %}
-                    {% endfor %}
-                </div>
-                {{ _self.filter_actions(datagrid, viewParameters) }}
-                <hr class="clear">
+    {% if form.filters|length > 0 %}
+        <div class="datagrid-filters">
+            <div class="row">
+                {% for subForm in form.filters %}
+                {{ form_row(subForm) }}
+                {% if loop.index % 3 == 0 %}
             </div>
-        {% endif %}
-        {% block datagrid_actions %}
-            {{ _self.actions(datagrid, viewParameters) }}
-        {% endblock %}
+            <div class="row">
+                {% endif %}
+                {% endfor %}
+            </div>
+            {{ current.filter_actions(datagrid, viewParameters) }}
+            <hr class="clear">
+        </div>
+    {% endif %}
+    {% block datagrid_actions %}
+        {{ current.actions(datagrid, viewParameters) }}
+    {% endblock %}
 
-        {{ _self.table(datagrid, viewParameters) }}
+    {{ current.table(datagrid, viewParameters) }}
 
-        {% if datagrid.filterConfig.pager.count > 10 %}
-            {{ block('datagrid_actions') }}
-        {% endif %}
+    {% if datagrid.filterConfig.pager.count > 10 %}
+        {{ block('datagrid_actions') }}
+    {% endif %}
     {{ form_end(form) }}
 {% endmacro %}
 
@@ -64,19 +66,19 @@
         </tr>
         </thead>
         <tbody>
-            {% for result in datagrid.filterConfig.results %}
-                <tr id="datagrid_row_{{ datagrid.code }}__{{ result.id }}">
-                    {% for column in datagrid.columns %}
-                        <td>
-                            {% if column.template %}
-                                {% include column.template %}
-                            {% else %}
-                                {{ render_object_value(result, column) }}
-                            {% endif %}
-                        </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
+        {% for result in datagrid.filterConfig.results %}
+            <tr id="datagrid_row_{{ datagrid.code }}__{{ result.id }}">
+                {% for column in datagrid.columns %}
+                    <td>
+                        {% if column.template %}
+                            {% include column.template %}
+                        {% else %}
+                            {{ render_object_value(result, column) }}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 {% endmacro %}
