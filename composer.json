@@ -16,10 +16,9 @@
             "role": "Developer"
         }
     ],
-    "target-dir": "Sidus/DataGridBundle",
     "autoload": {
-        "psr-0": {
-            "Sidus\\DataGridBundle": ""
+        "psr-4": {
+            "Sidus\\DataGridBundle\\": ""
         }
     },
     "require": {
