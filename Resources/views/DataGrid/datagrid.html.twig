@@ -67,7 +67,7 @@
         </thead>
         <tbody>
         {% for result in datagrid.filterConfig.results %}
-            <tr id="datagrid_row_{{ datagrid.code }}__{{ result.id }}">
+            <tr class="datagrid-row"{% if result.id is defined %} data-entity-id="{{ result.id }}"{% endif %}>
                 {% for column in datagrid.columns %}
                     <td>
                         {% if column.template %}
