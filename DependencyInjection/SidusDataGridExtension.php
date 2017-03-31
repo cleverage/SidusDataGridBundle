@@ -114,12 +114,14 @@ class SidusDataGridExtension extends Extension
         $dataGridConfiguration = $this->finalizeConfiguration($code, $dataGridConfiguration, $container);
 
         $definition = new Definition(
-            new Parameter('sidus_data_grid.model.datagrid.class'), [
-            $code,
-            $dataGridConfiguration,
-        ]
+            new Parameter('sidus_data_grid.model.datagrid.class'),
+            [
+                $code,
+                $dataGridConfiguration,
+            ]
         );
         $definition->addTag('sidus.datagrid');
+        $definition->setPublic(false);
         $container->setDefinition('sidus_data_grid.datagrid.'.$code, $definition);
     }
 
@@ -162,13 +164,15 @@ class SidusDataGridExtension extends Extension
         $filterConfig = $this->finalizeFilterConfiguration($code, $dataGridConfiguration['filter_config']);
 
         $definition = new Definition(
-            new Parameter('sidus_filter.configuration.class'), [
-            $code,
-            new Reference('doctrine'),
-            new Reference('sidus_filter.filter.factory'),
-            $filterConfig,
-        ]
+            new Parameter('sidus_filter.configuration.class'),
+            [
+                $code,
+                new Reference('doctrine'),
+                new Reference('sidus_filter.filter.factory'),
+                $filterConfig,
+            ]
         );
+        $definition->setPublic(false);
 
         $serviceId = 'sidus_filter.datagrid.configuration.'.$code;
         $container->setDefinition($serviceId, $definition);
