@@ -1,7 +1,7 @@
 sidus:
     datagrid:
         reset:
-            label: Reset
+            label: Réinitialiser
         submit:
             label: Filtrer
         results:
