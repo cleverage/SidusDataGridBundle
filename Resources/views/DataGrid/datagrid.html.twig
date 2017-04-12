@@ -1,4 +1,5 @@
 {% macro render(datagrid, viewParameters) %}
+    {% import _self as current %}
     {% set form = datagrid.formView %}
 
     {% form_theme form datagrid.formTheme %}
@@ -8,15 +9,15 @@
                 <div class="row">
                     {{ form_widget(form.filters) }}
                 </div>
-                {{ _self.filter_actions(datagrid, viewParameters) }}
+                {{ current.filter_actions(datagrid, viewParameters) }}
                 <hr class="clear">
             </div>
         {% endif %}
         {% block datagrid_actions %}
-            {{ _self.actions(datagrid, viewParameters) }}
+            {{ current.actions(datagrid, viewParameters) }}
         {% endblock %}
 
-        {{ _self.table(datagrid, viewParameters) }}
+        {{ current.table(datagrid, viewParameters) }}
 
         {% if datagrid.filterConfig.pager.count > 10 %}
             {{ block('datagrid_actions') }}
