@@ -44,7 +44,9 @@
             {{ pagerfanta(datagrid.filterConfig.pager, 'twitter_bootstrap3') }}
         </div>
         <div class="btn-group">
-            {{ form_widget(datagrid.formView.actions) }}
+            {% for action in datagrid.formView.actions %}
+                {{ form_widget(action) }}
+            {% endfor %}
         </div>
     </div>
 {% endmacro %}
@@ -66,7 +68,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for result in datagrid.filterConfig.results %}
+        {% for result in datagrid.results %}
             <tr class="datagrid-row"{% if result.id is defined %} data-entity-id="{{ result.id }}"{% endif %}>
                 {% for column in datagrid.columns %}
                     <td>

@@ -2,6 +2,8 @@
 
 namespace Sidus\DataGridBundle\Model;
 
+use Pagerfanta\Exception\InvalidArgumentException;
+use Pagerfanta\Exception\LessThan1MaxPerPageException;
 use Sidus\DataGridBundle\Form\Type\LinkType;
 use Sidus\DataGridBundle\Templating\Renderable;
 use Sidus\FilterBundle\Configuration\FilterConfigurationHandler;
@@ -337,6 +339,16 @@ class DataGrid
     public function handleRequest(Request $request)
     {
         $this->filterConfig->handleRequest($request);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     *
+     * @return array|\Traversable
+     */
+    public function getResults()
+    {
+        return $this->getFilterConfig()->getResults();
     }
 
     /**
