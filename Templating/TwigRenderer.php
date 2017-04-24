@@ -84,6 +84,9 @@ class TwigRenderer extends Twig_Extension implements Renderable
             ) {
                 $dateType = $options['time_type'];
             }
+            if ($value->format('H:i') === '00:00') {
+                $timeType = IntlDateFormatter::NONE;
+            }
             $dateFormatter = new IntlDateFormatter($this->translator->getLocale(), $dateType, $timeType);
 
             return $dateFormatter->format($value);
