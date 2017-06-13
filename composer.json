@@ -22,6 +22,6 @@
         }
     },
     "require": {
-        "sidus/filter-bundle": "dev-v1.2.x-dev"
+        "sidus/filter-bundle": "1.2.*"
     }
 }
