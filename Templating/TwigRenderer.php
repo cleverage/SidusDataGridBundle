@@ -110,8 +110,13 @@ class TwigRenderer extends Twig_Extension implements Renderable
         }
         if (is_array($value) || $value instanceof \Traversable) {
             $items = [];
-            foreach ($value as $item) {
-                $items[] = $this->renderValue($item, $options);
+            /** @noinspection ForeachSourceInspection */
+            foreach ($value as $key => $item) {
+                $rendered = $this->renderValue($item, $options);
+                if (!is_numeric($key)) {
+                    $rendered = $key.': '.$rendered;
+                }
+                $items[] = $rendered;
             }
             $glue = ', ';
             if (!empty($options['array_glue'])) {
