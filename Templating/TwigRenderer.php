@@ -125,9 +125,6 @@ class TwigRenderer extends Twig_Extension implements Renderable
 
             return implode($glue, $items);
         }
-        if (is_callable($value)) {
-            return $value($options);
-        }
         if (is_bool($value)) {
             return $this->translator->trans($value ? 'sidus.datagrid.boolean.yes' : 'sidus.datagrid.boolean.no');
         }
