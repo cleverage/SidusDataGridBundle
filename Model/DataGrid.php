@@ -3,10 +3,9 @@
 namespace Sidus\DataGridBundle\Model;
 
 use Pagerfanta\Exception\InvalidArgumentException;
-use Pagerfanta\Exception\LessThan1MaxPerPageException;
 use Sidus\DataGridBundle\Form\Type\LinkType;
 use Sidus\DataGridBundle\Templating\Renderable;
-use Sidus\FilterBundle\Configuration\FilterConfigurationHandler;
+use Sidus\FilterBundle\Configuration\FilterConfigurationHandlerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Form;
@@ -25,7 +24,7 @@ class DataGrid
     /** @var string */
     protected $code;
 
-    /** @var FilterConfigurationHandler */
+    /** @var FilterConfigurationHandlerInterface */
     protected $filterConfig;
 
     /** @var string */
@@ -98,7 +97,7 @@ class DataGrid
     }
 
     /**
-     * @return FilterConfigurationHandler
+     * @return FilterConfigurationHandlerInterface
      */
     public function getFilterConfig()
     {
@@ -106,11 +105,11 @@ class DataGrid
     }
 
     /**
-     * @param FilterConfigurationHandler $filterConfig
+     * @param FilterConfigurationHandlerInterface $filterConfig
      *
      * @return DataGrid
      */
-    public function setFilterConfig(FilterConfigurationHandler $filterConfig)
+    public function setFilterConfig(FilterConfigurationHandlerInterface $filterConfig)
     {
         $this->filterConfig = $filterConfig;
 
@@ -318,8 +317,9 @@ class DataGrid
     /**
      * @param FormBuilder $builder
      *
-     * @return $this
      * @throws \Exception
+     *
+     * @return Form
      */
     public function buildForm(FormBuilder $builder)
     {

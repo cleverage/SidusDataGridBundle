@@ -198,7 +198,7 @@ class Column implements Renderable
     {
         if (!$this->label) {
             return ucfirst(
-                trim(strtolower(preg_replace(['/([A-Z])/', '/[_\s]+/'], ['_$1', ' '], $this->getCode())))
+                strtolower(trim(preg_replace(['/([A-Z])/', '/[_\s]+/'], ['_$1', ' '], $this->getCode())))
             );
         }
 

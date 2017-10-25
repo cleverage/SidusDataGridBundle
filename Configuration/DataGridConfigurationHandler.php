@@ -5,6 +5,9 @@ namespace Sidus\DataGridBundle\Configuration;
 use Sidus\DataGridBundle\Model\DataGrid;
 use UnexpectedValueException;
 
+/**
+ * Handles datagrids configurations
+ */
 class DataGridConfigurationHandler
 {
     /** @var DataGrid[] */
@@ -27,7 +30,7 @@ class DataGridConfigurationHandler
     }
 
     /**
-     * @param $code
+     * @param string $code
      *
      * @return DataGrid
      * @throws UnexpectedValueException
