@@ -166,10 +166,10 @@ class SidusDataGridExtension extends Extension
         $definition = new Definition(
             new Parameter('sidus_filter.configuration.class'),
             [
-                $code,
-                new Reference('doctrine'),
                 new Reference('sidus_filter.filter.factory'),
+                $code,
                 $filterConfig,
+                new Reference('doctrine'),
             ]
         );
         $definition->setPublic(false);
