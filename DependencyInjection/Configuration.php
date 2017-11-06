@@ -46,10 +46,11 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @return NodeDefinition
      * @throws \RuntimeException
+     *
+     * @return NodeDefinition
      */
-    protected function getDataGridConfigTreeBuilder()
+    protected function getDataGridConfigTreeBuilder(): NodeDefinition
     {
         $builder = new TreeBuilder();
         $node = $builder->root('configurations');
@@ -61,7 +62,8 @@ class Configuration implements ConfigurationInterface
 
         $this->appendDataGridDefinition($dataGridDefinition);
 
-        $dataGridDefinition->end()
+        $dataGridDefinition
+            ->end()
             ->end()
             ->end();
 
@@ -73,25 +75,37 @@ class Configuration implements ConfigurationInterface
      */
     protected function appendDataGridDefinition(NodeBuilder $dataGridDefinition)
     {
-        $dataGridDefinition
-            ->variableNode('filter_config')->end()
-            ->scalarNode('form_theme')->defaultNull()->end()
-            ->scalarNode('parent')->defaultNull()->end()
-            ->scalarNode('renderer')->defaultNull()->end()
+        $columnDefinition = $dataGridDefinition
+            ->variableNode('query_handler')->end()
+            ->scalarNode('form_theme')->end()
+            ->scalarNode('parent')->end()
+            ->scalarNode('renderer')->end()
             ->variableNode('actions')->end()
-            ->variableNode('submit_button')->defaultValue([])->end()
-            ->variableNode('reset_button')->defaultValue([])->end()
+            ->variableNode('submit_button')->end()
+            ->variableNode('reset_button')->end()
             ->arrayNode('columns')
             ->prototype('array')
-            ->children()
-            ->scalarNode('template')->defaultNull()->end()
-            ->scalarNode('sort_column')->defaultNull()->end()
-            ->scalarNode('property_path')->defaultNull()->end()
-            ->scalarNode('label')->defaultNull()->end()
-            ->scalarNode('renderer')->defaultNull()->end()
-            ->variableNode('formatting_options')->defaultValue([])->end()
+            ->children();
+
+        $this->appendColumnDefinition($columnDefinition);
+
+        $columnDefinition
             ->end()
             ->end()
             ->end();
+    }
+
+    /**
+     * @param NodeBuilder $columnDefinition
+     */
+    protected function appendColumnDefinition(NodeBuilder $columnDefinition)
+    {
+        $columnDefinition
+            ->scalarNode('template')->end()
+            ->scalarNode('sort_column')->end()
+            ->scalarNode('property_path')->end()
+            ->scalarNode('label')->end()
+            ->scalarNode('renderer')->end()
+            ->variableNode('formatting_options')->end();
     }
 }

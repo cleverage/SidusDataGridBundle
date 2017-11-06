@@ -2,10 +2,15 @@
 
 namespace Sidus\DataGridBundle;
 
-use Sidus\DataGridBundle\DependencyInjection\Compiler\DataGridCompilerPass;
+use Sidus\FilterBundle\DependencyInjection\Compiler\GenericCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * Class SidusDataGridBundle
+ *
+ * @package Sidus\DataGridBundle
+ */
 class SidusDataGridBundle extends Bundle
 {
     /**
@@ -15,8 +20,10 @@ class SidusDataGridBundle extends Bundle
      */
     public function build(ContainerBuilder $container)
     {
-        parent::build($container);
-
-        $container->addCompilerPass(new DataGridCompilerPass());
+        $container->addCompilerPass(new GenericCompilerPass(
+            'sidus_data_grid.registry.datagrid',
+            'sidus.datagrid',
+            'addDataGrid'
+        ));
     }
 }

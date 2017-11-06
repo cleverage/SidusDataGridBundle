@@ -1,0 +1,108 @@
+<?php
+
+namespace Sidus\DataGridBundle\Registry;
+
+use Sidus\DataGridBundle\Model\DataGrid;
+use Sidus\FilterBundle\Registry\QueryHandlerRegistry;
+use UnexpectedValueException;
+
+/**
+ * Handles datagrids configurations
+ */
+class DataGridRegistry
+{
+    /** @var QueryHandlerRegistry */
+    protected $queryHandlerRegistry;
+
+    /** @var DataGrid[] */
+    protected $dataGrids = [];
+
+    /** @var array[] */
+    protected $dataGridConfigurations = [];
+
+    /**
+     * @param QueryHandlerRegistry $queryHandlerRegistry
+     */
+    public function __construct(QueryHandlerRegistry $queryHandlerRegistry)
+    {
+        $this->queryHandlerRegistry = $queryHandlerRegistry;
+    }
+
+    /**
+     * @param string $code
+     * @param array  $configuration
+     */
+    public function addRawDataGridConfiguration(string $code, array $configuration)
+    {
+        $this->dataGridConfigurations[$code] = $configuration;
+    }
+
+    /**
+     * @param DataGrid $dataGrid
+     */
+    public function addDataGrid(DataGrid $dataGrid)
+    {
+        $this->dataGrids[$dataGrid->getCode()] = $dataGrid;
+    }
+
+    /**
+     * @param string $code
+     *
+     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
+     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerFactoryException
+     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerException
+     * @throws \Sidus\FilterBundle\Exception\MissingFilterException
+     * @throws \UnexpectedValueException
+     *
+     * @return DataGrid
+     */
+    public function getDataGrid(string $code): DataGrid
+    {
+        if (!array_key_exists($code, $this->dataGrids)) {
+            return $this->buildDataGrid($code);
+        }
+
+        return $this->dataGrids[$code];
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return bool
+     */
+    public function hasDataGrid(string $code): bool
+    {
+        return array_key_exists($code, $this->dataGrids) || array_key_exists($code, $this->dataGridConfigurations);
+    }
+
+    /**
+     * @param string $code
+     *
+     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
+     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerFactoryException
+     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerException
+     * @throws \Sidus\FilterBundle\Exception\MissingFilterException
+     * @throws \UnexpectedValueException
+     *
+     * @return DataGrid
+     */
+    protected function buildDataGrid(string $code): DataGrid
+    {
+        if (!array_key_exists($code, $this->dataGridConfigurations)) {
+            throw new UnexpectedValueException("No data-grid with code : {$code}");
+        }
+
+        $configuration = $this->dataGridConfigurations[$code];
+        $this->queryHandlerRegistry->addRawQueryHandlerConfiguration(
+            '__sidus_datagrid.'.$code,
+            $configuration['query_handler']
+        );
+        $configuration['query_handler'] = $this->queryHandlerRegistry->getQueryHandler('__sidus_datagrid.'.$code);
+
+        $dataGrid = new DataGrid($code, $configuration);
+        $this->addDataGrid($dataGrid);
+        unset($this->dataGridConfigurations[$code]);
+
+        return $dataGrid;
+    }
+}

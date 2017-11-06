@@ -2,10 +2,13 @@
 
 namespace Sidus\DataGridBundle\Model;
 
-use Sidus\DataGridBundle\Templating\Renderable;
+use Sidus\DataGridBundle\Templating\RenderableInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
-class Column implements Renderable
+/**
+ * Represents a column configuration for a datagrid
+ */
+class Column implements RenderableInterface
 {
     /** @var string */
     protected $code;
@@ -22,11 +25,11 @@ class Column implements Renderable
     /** @var string */
     protected $propertyPath;
 
-    /** @var Renderable */
+    /** @var RenderableInterface */
     protected $renderer;
 
     /** @var array */
-    protected $formattingOptions;
+    protected $formattingOptions = [];
 
     /** @var string */
     protected $label;
@@ -38,7 +41,7 @@ class Column implements Renderable
      * @param DataGrid $dataGrid
      * @param array    $options
      *
-     * @throws \Exception
+     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
      */
     public function __construct($code, DataGrid $dataGrid, array $options = [])
     {
@@ -54,33 +57,29 @@ class Column implements Renderable
     /**
      * @return string
      */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
 
     /**
      * @param string $code
-     *
-     * @return Column
      */
-    public function setCode($code)
+    public function setCode(string $code)
     {
         $this->code = $code;
-
-        return $this;
     }
 
     /**
      * @return DataGrid
      */
-    public function getDataGrid()
+    public function getDataGrid(): DataGrid
     {
         return $this->dataGrid;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getTemplate()
     {
@@ -89,20 +88,16 @@ class Column implements Renderable
 
     /**
      * @param string $template
-     *
-     * @return Column
      */
-    public function setTemplate($template)
+    public function setTemplate(string $template)
     {
         $this->template = $template;
-
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getSortColumn()
+    public function getSortColumn(): string
     {
         if (!$this->sortColumn) {
             return $this->getCode();
@@ -113,20 +108,16 @@ class Column implements Renderable
 
     /**
      * @param string $sortColumn
-     *
-     * @return Column
      */
-    public function setSortColumn($sortColumn)
+    public function setSortColumn(string $sortColumn)
     {
         $this->sortColumn = $sortColumn;
-
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getPropertyPath()
+    public function getPropertyPath(): string
     {
         if (!$this->propertyPath) {
             return $this->getCode();
@@ -137,20 +128,16 @@ class Column implements Renderable
 
     /**
      * @param string $propertyPath
-     *
-     * @return Column
      */
-    public function setPropertyPath($propertyPath)
+    public function setPropertyPath(string $propertyPath)
     {
         $this->propertyPath = $propertyPath;
-
-        return $this;
     }
 
     /**
-     * @return Renderable
+     * @return RenderableInterface
      */
-    public function getRenderer()
+    public function getRenderer(): RenderableInterface
     {
         if (!$this->renderer) {
             return $this->getDataGrid()->getRenderer();
@@ -160,41 +147,33 @@ class Column implements Renderable
     }
 
     /**
-     * @param Renderable $renderer
-     *
-     * @return Column
+     * @param RenderableInterface $renderer
      */
-    public function setRenderer(Renderable $renderer = null)
+    public function setRenderer(RenderableInterface $renderer)
     {
         $this->renderer = $renderer;
-
-        return $this;
     }
 
     /**
      * @return array
      */
-    public function getFormattingOptions()
+    public function getFormattingOptions(): array
     {
         return $this->formattingOptions;
     }
 
     /**
      * @param array $formattingOptions
-     *
-     * @return Column
      */
     public function setFormattingOptions(array $formattingOptions)
     {
         $this->formattingOptions = $formattingOptions;
-
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getLabel()
+    public function getLabel(): string
     {
         if (!$this->label) {
             return ucfirst(
@@ -207,14 +186,10 @@ class Column implements Renderable
 
     /**
      * @param string $label
-     *
-     * @return Column
      */
-    public function setLabel($label)
+    public function setLabel(string $label)
     {
         $this->label = $label;
-
-        return $this;
     }
 
     /**
@@ -223,8 +198,8 @@ class Column implements Renderable
      *
      * @return string
      */
-    public function renderValue($value, array $options = [])
+    public function renderValue($value, array $options = []): string
     {
-        return $this->getRenderer()->renderValue($value, array_merge($this->getFormattingOptions(), $options));
+        return (string) $this->getRenderer()->renderValue($value, array_merge($this->getFormattingOptions(), $options));
     }
 }

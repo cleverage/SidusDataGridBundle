@@ -1,4 +1,5 @@
 {% macro render(datagrid, viewParameters) %}
+    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
     {% import _self as current %}
     {% set form = datagrid.formView %}
 
@@ -25,13 +26,14 @@
 
     {{ current.table(datagrid, viewParameters) }}
 
-    {% if datagrid.filterConfig.pager.count > 10 %}
+    {% if datagrid.queryHandler.pager.count > 10 %}
         {{ block('datagrid_actions') }}
     {% endif %}
     {{ form_end(form) }}
 {% endmacro %}
 
 {% macro filter_actions(datagrid, viewParameters) %}
+    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
     <div class="datagrid-filters-actions btn-group pull-right">
         {{ form_widget(datagrid.formView.filterResetButton) }}
         {{ form_widget(datagrid.formView.filterSubmitButton) }}
@@ -39,9 +41,10 @@
 {% endmacro %}
 
 {% macro actions(datagrid, viewParameters) %}
+    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
     <div class="datagrid-actions">
         <div class="pull-right">
-            {{ pagerfanta(datagrid.filterConfig.pager, 'twitter_bootstrap3') }}
+            {{ pagerfanta(datagrid.queryHandler.pager, 'twitter_bootstrap3') }}
         </div>
         <div class="btn-group">
             {% for action in datagrid.formView.actions %}
@@ -52,9 +55,10 @@
 {% endmacro %}
 
 {% macro table(datagrid, viewParameters) %}
+    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
     {% set sort = datagrid.formView.sortable %}
     <table class="table table-striped">
-        <caption>{{ datagrid.filterConfig.pager.count }} {{ 'sidus.datagrid.results.label'|trans }}</caption>
+        <caption>{{ datagrid.queryHandler.pager.count }} {{ 'sidus.datagrid.results.label'|trans }}</caption>
         <thead>
         <tr>
             {% for column in datagrid.columns %}
@@ -68,7 +72,7 @@
         </tr>
         </thead>
         <tbody>
-        {% for result in datagrid.results %}
+        {% for result in datagrid.queryHandler.pager %}
             <tr class="datagrid-row"{% if result.id is defined %} data-entity-id="{{ result.id }}"{% endif %}>
                 {% for column in datagrid.columns %}
                     <td>

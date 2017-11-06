@@ -11,7 +11,10 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
-class TwigRenderer extends Twig_Extension implements Renderable
+/**
+ * Render values inside the Twig engine
+ */
+class TwigRenderer extends Twig_Extension implements RenderableInterface
 {
     /** @var TranslatorInterface */
     protected $translator;
@@ -66,11 +69,11 @@ class TwigRenderer extends Twig_Extension implements Renderable
      * @return string
      * @throws \Exception
      */
-    public function renderValue($value, array $options = [])
+    public function renderValue($value, array $options = []): string
     {
         if ($value instanceof \DateTime) {
             if (!empty($options['date_format'])) {
-                return $value->format($options['date_format']);
+                return (string) $value->format($options['date_format']);
             }
             $dateType = IntlDateFormatter::MEDIUM;
             $timeType = IntlDateFormatter::SHORT;
@@ -89,10 +92,10 @@ class TwigRenderer extends Twig_Extension implements Renderable
             }
             $dateFormatter = new IntlDateFormatter($this->translator->getLocale(), $dateType, $timeType);
 
-            return $dateFormatter->format($value);
+            return (string) $dateFormatter->format($value);
         }
         if (is_int($value)) {
-            return $value;
+            return (string) $value;
         }
         if (is_float($value)) {
             if (array_key_exists('decimals', $options) || array_key_exists('dec_point', $options) ||
@@ -106,7 +109,7 @@ class TwigRenderer extends Twig_Extension implements Renderable
             }
             $numberFormatter = new NumberFormatter($this->translator->getLocale(), NumberFormatter::DECIMAL);
 
-            return $numberFormatter->format($value);
+            return (string) $numberFormatter->format($value);
         }
         if (is_array($value) || $value instanceof \Traversable) {
             $items = [];
@@ -126,19 +129,9 @@ class TwigRenderer extends Twig_Extension implements Renderable
             return implode($glue, $items);
         }
         if (is_bool($value)) {
-            return $this->translator->trans($value ? 'sidus.datagrid.boolean.yes' : 'sidus.datagrid.boolean.no');
+            return (string) $this->translator->trans($value ? 'sidus.datagrid.boolean.yes' : 'sidus.datagrid.boolean.no');
         }
 
-        return $value;
-    }
-
-    /**
-     * Returns the name of the extension.
-     *
-     * @return string The extension name
-     */
-    public function getName()
-    {
-        return 'sidus_datagrid';
+        return (string) $value;
     }
 }

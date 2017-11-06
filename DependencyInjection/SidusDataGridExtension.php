@@ -2,16 +2,12 @@
 
 namespace Sidus\DataGridBundle\DependencyInjection;
 
-use ReflectionClass;
 use Sidus\FilterBundle\DependencyInjection\Configuration as FilterConfiguration;
+use Sidus\FilterBundle\DependencyInjection\Loader\ServiceLoader;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Exception\BadMethodCallException;
-use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
 use UnexpectedValueException;
 
 /**
@@ -26,42 +22,40 @@ class SidusDataGridExtension extends Extension
 
     /**
      * {@inheritdoc}
+     *
      * @throws \Exception
-     * @throws BadMethodCallException
-     * @throws UnexpectedValueException
      */
     public function load(array $configs, ContainerBuilder $container)
     {
+        $loader = new ServiceLoader(__DIR__.'/../Resources/config/services');
+        $loader->loadFiles($container);
+
         $configuration = $this->createConfigurationParser();
         $this->globalConfiguration = $this->processConfiguration($configuration, $configs);
 
-        foreach ($this->globalConfiguration['configurations'] as $code => $dataGridConfiguration) {
-            $this->addDataGridServiceDefinition($code, $dataGridConfiguration, $container);
+        $dataGridRegistry = $container->getDefinition('sidus_data_grid.registry.datagrid');
+        foreach ((array) $this->globalConfiguration['configurations'] as $code => $dataGridConfiguration) {
+            $dataGridConfiguration = $this->finalizeConfiguration($code, $dataGridConfiguration);
+            $dataGridRegistry->addMethodCall('addRawDataGridConfiguration', [$code, $dataGridConfiguration]);
         }
-
-        $classInfo = new ReflectionClass($this);
-        $loader = new Loader\YamlFileLoader(
-            $container,
-            new FileLocator(dirname($classInfo->getFileName()).'/../Resources/config')
-        );
-        $loader->load('services.yml');
     }
 
     /**
      * Handle configuration parsing logic not handled by the semantic configuration definition
      *
-     * @param                  $code
-     * @param                  $dataGridConfiguration
-     * @param ContainerBuilder $container
+     * @param string $code
+     * @param array  $dataGridConfiguration
+     *
+     * @throws \Exception
      *
      * @return array
-     * @throws BadMethodCallException
-     * @throws UnexpectedValueException
      */
-    protected function finalizeConfiguration($code, array $dataGridConfiguration, ContainerBuilder $container)
-    {
-        // Handle possible parent configuration
-        if ($dataGridConfiguration['parent']) {
+    protected function finalizeConfiguration(
+        string $code,
+        array $dataGridConfiguration
+    ): array {
+        // Handle possible parent configuration @todo find a better way to do this
+        if (isset($dataGridConfiguration['parent'])) {
             $parent = $dataGridConfiguration['parent'];
             if (empty($this->globalConfiguration['configurations'][$parent])) {
                 throw new UnexpectedValueException("Unknown configuration {$parent}");
@@ -79,59 +73,34 @@ class SidusDataGridExtension extends Extension
             $dataGridConfiguration['renderer'] = $this->globalConfiguration['default_renderer'];
         }
 
-        // Allow either a service or a direct configuration for filters
-        if (is_array($dataGridConfiguration['filter_config'])) {
-            $dataGridConfiguration['filter_config'] = $this->addFilterConfiguration(
-                $code,
-                $dataGridConfiguration,
-                $container
-            );
-        } elseif (0 === strpos($dataGridConfiguration['filter_config'], '@')) {
-            $dataGridConfiguration['filter_config'] = new Reference(
-                ltrim($dataGridConfiguration['filter_config'], '@')
-            );
-        } else {
-            throw new UnexpectedValueException(
-                'filter_config option must be either a service or a valid filter configuration'
-            );
+        if (isset($dataGridConfiguration['query_handler'])) {
+            // Allow either a service or a direct configuration for filters
+            if (is_array($dataGridConfiguration['query_handler'])) {
+                $dataGridConfiguration['query_handler'] = $this->finalizeFilterConfiguration(
+                    $code,
+                    $dataGridConfiguration['query_handler']
+                );
+            } elseif (0 === strpos($dataGridConfiguration['query_handler'], '@')) {
+                $dataGridConfiguration['query_handler'] = new Reference(
+                    ltrim($dataGridConfiguration['query_handler'], '@')
+                );
+            } else {
+                throw new UnexpectedValueException(
+                    'query_handler option must be either a service or a valid filter configuration'
+                );
+            }
         }
 
         return $dataGridConfiguration;
     }
 
     /**
-     * Add a new Filter service based on the configuration passed inside the datagrid
-     *
-     * @param string           $code
-     * @param array            $dataGridConfiguration
-     * @param ContainerBuilder $container
-     *
-     * @throws BadMethodCallException
-     * @throws UnexpectedValueException
-     */
-    protected function addDataGridServiceDefinition($code, array $dataGridConfiguration, ContainerBuilder $container)
-    {
-        $dataGridConfiguration = $this->finalizeConfiguration($code, $dataGridConfiguration, $container);
-
-        $definition = new Definition(
-            new Parameter('sidus_data_grid.model.datagrid.class'),
-            [
-                $code,
-                $dataGridConfiguration,
-            ]
-        );
-        $definition->addTag('sidus.datagrid');
-        $definition->setPublic(false);
-        $container->setDefinition('sidus_data_grid.datagrid.'.$code, $definition);
-    }
-
-    /**
-     * @param       $code
-     * @param array $filterConfig
+     * @param string $code
+     * @param array  $queryHandlerConfig
      *
      * @return array
      */
-    protected function finalizeFilterConfiguration($code, array $filterConfig)
+    protected function finalizeFilterConfiguration(string $code, array $queryHandlerConfig): array
     {
         // Parse configuration using Configuration parser from FilterBundle
         $configuration = $this->createFilterConfigurationParser();
@@ -140,7 +109,7 @@ class SidusDataGridExtension extends Extension
             [
                 [
                     'configurations' => [
-                        $code => $filterConfig,
+                        $code => $queryHandlerConfig,
                     ],
                 ],
             ]
@@ -150,42 +119,11 @@ class SidusDataGridExtension extends Extension
     }
 
     /**
-     * Handle direct configuration of filters, uses the same logic than the FilterBundle to generate a service
-     *
-     * @param                  $code
-     * @param array            $dataGridConfiguration
-     * @param ContainerBuilder $container
-     *
-     * @return Reference
-     * @throws BadMethodCallException
-     */
-    protected function addFilterConfiguration($code, array $dataGridConfiguration, ContainerBuilder $container)
-    {
-        $filterConfig = $this->finalizeFilterConfiguration($code, $dataGridConfiguration['filter_config']);
-
-        $definition = new Definition(
-            new Parameter('sidus_filter.configuration.class'),
-            [
-                new Reference('sidus_filter.filter.factory'),
-                $code,
-                $filterConfig,
-                new Reference('doctrine'),
-            ]
-        );
-        $definition->setPublic(false);
-
-        $serviceId = 'sidus_filter.datagrid.configuration.'.$code;
-        $container->setDefinition($serviceId, $definition);
-
-        return new Reference($serviceId);
-    }
-
-    /**
      * Allows the configuration class to be different in inherited classes
      *
-     * @return Configuration
+     * @return ConfigurationInterface
      */
-    protected function createConfigurationParser()
+    protected function createConfigurationParser(): ConfigurationInterface
     {
         return new Configuration();
     }
@@ -193,9 +131,9 @@ class SidusDataGridExtension extends Extension
     /**
      * Allows the configuration class to be different in inherited classes
      *
-     * @return FilterConfiguration
+     * @return ConfigurationInterface
      */
-    protected function createFilterConfigurationParser()
+    protected function createFilterConfigurationParser(): ConfigurationInterface
     {
         return new FilterConfiguration();
     }

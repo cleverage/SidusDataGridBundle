@@ -1,0 +1,10 @@
+services:
+    sidus_data_grid.registry.datagrid:
+        class: Sidus\DataGridBundle\Registry\DataGridRegistry
+        arguments:
+            - '@sidus_filter.registry.query_handler'
+
+    sidus_data_grid.form.link.type:
+        class: Sidus\DataGridBundle\Form\Type\LinkType
+        tags:
+            - { name: form.type }

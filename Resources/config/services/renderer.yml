@@ -1,0 +1,6 @@
+services:
+    sidus_data_grid.renderer.twig:
+        class: Sidus\DataGridBundle\Templating\TwigRenderer
+        arguments: ['@translator', '@property_accessor']
+        tags:
+            - { name: twig.extension }

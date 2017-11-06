@@ -1,0 +1,5 @@
+services:
+    sidus_data_grid.form.link.type:
+        class: Sidus\DataGridBundle\Form\Type\LinkType
+        tags:
+            - { name: form.type }
