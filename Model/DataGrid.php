@@ -8,7 +8,7 @@ use Sidus\DataGridBundle\Templating\RenderableInterface;
 use Sidus\FilterBundle\Query\Handler\QueryHandlerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,7 +59,7 @@ class DataGrid
      *
      * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
      */
-    public function __construct($code, array $configuration)
+    public function __construct(string $code, array $configuration)
     {
         $this->code = $code;
         /** @var array $columns */
@@ -111,7 +111,7 @@ class DataGrid
     /**
      * @param string $formTheme
      */
-    public function setFormTheme($formTheme)
+    public function setFormTheme(string $formTheme = null)
     {
         $this->formTheme = $formTheme;
     }
@@ -185,7 +185,7 @@ class DataGrid
      *
      * @return bool
      */
-    public function hasAction($action): bool
+    public function hasAction(string $action): bool
     {
         return array_key_exists($action, $this->actions);
     }
@@ -268,13 +268,13 @@ class DataGrid
     }
 
     /**
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      *
      * @throws \Exception
      *
      * @return FormInterface
      */
-    public function buildForm(FormBuilder $builder): FormInterface
+    public function buildForm(FormBuilderInterface $builder): FormInterface
     {
         $this->buildFilterActions($builder);
         $this->buildDataGridActions($builder);
@@ -348,24 +348,24 @@ class DataGrid
     }
 
     /**
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      *
      * @throws \Exception
      */
-    protected function buildFilterActions(FormBuilder $builder)
+    protected function buildFilterActions(FormBuilderInterface $builder)
     {
-        if (count($this->getQueryHandler()->getConfiguration()->getFilters()) > 0) {
+        if (\count($this->getQueryHandler()->getConfiguration()->getFilters()) > 0) {
             $this->buildResetAction($builder);
             $this->buildSubmitAction($builder);
         }
     }
 
     /**
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      *
      * @throws \Exception
      */
-    protected function buildResetAction(FormBuilder $builder)
+    protected function buildResetAction(FormBuilderInterface $builder)
     {
         $action = $builder->getOption('action');
         $defaults = [
@@ -381,11 +381,11 @@ class DataGrid
     }
 
     /**
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      *
      * @throws \Exception
      */
-    protected function buildSubmitAction(FormBuilder $builder)
+    protected function buildSubmitAction(FormBuilderInterface $builder)
     {
         $defaults = [
             'form_type' => SubmitType::class,
@@ -402,9 +402,9 @@ class DataGrid
     }
 
     /**
-     * @param FormBuilder $builder
+     * @param FormBuilderInterface $builder
      */
-    protected function buildDataGridActions(FormBuilder $builder)
+    protected function buildDataGridActions(FormBuilderInterface $builder)
     {
         $actionsBuilder = $builder->create(
             'actions',
@@ -427,7 +427,7 @@ class DataGrid
      *
      * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
      */
-    protected function createColumn($key, array $columnConfiguration)
+    protected function createColumn(string $key, array $columnConfiguration)
     {
         $this->columns[] = new Column($key, $this, $columnConfiguration);
     }
