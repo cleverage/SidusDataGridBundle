@@ -79,7 +79,7 @@
                         {% if column.template %}
                             {% include column.template %}
                         {% else %}
-                            {{ render_object_value(result, column) }}
+                            {{ column.render(result) }}
                         {% endif %}
                     </td>
                 {% endfor %}

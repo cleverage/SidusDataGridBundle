@@ -2,13 +2,14 @@
 
 namespace Sidus\DataGridBundle\Model;
 
-use Sidus\DataGridBundle\Templating\RenderableInterface;
+use Sidus\DataGridBundle\Renderer\RenderableInterface;
+use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
  * Represents a column configuration for a datagrid
  */
-class Column implements RenderableInterface
+class Column
 {
     /** @var string */
     protected $code;
@@ -193,13 +194,27 @@ class Column implements RenderableInterface
     }
 
     /**
-     * @param mixed $value
+     * Render column for a given result
+     *
+     * @param mixed $object
      * @param array $options
      *
-     * @return string
+     * @return string|boolean
      */
-    public function renderValue($value, array $options = []): string
+    public function render($object, array $options = [])
     {
-        return (string) $this->getRenderer()->renderValue($value, array_merge($this->getFormattingOptions(), $options));
+        $options = array_merge(
+            ['column' => $this, 'object' => $object],
+            $this->getFormattingOptions(),
+            $options
+        );
+        $accessor = PropertyAccess::createPropertyAccessor();
+        try {
+            $value = $accessor->getValue($object, $this->getPropertyPath());
+
+            return $this->getRenderer()->renderValue($value, $options);
+        } catch (ExceptionInterface $e) {
+            return false;
+        }
     }
 }

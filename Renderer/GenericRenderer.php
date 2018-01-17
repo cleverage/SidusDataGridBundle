@@ -1,20 +1,16 @@
 <?php
 
-namespace Sidus\DataGridBundle\Templating;
+namespace Sidus\DataGridBundle\Renderer;
 
 use IntlDateFormatter;
 use NumberFormatter;
-use Sidus\DataGridBundle\Model\Column;
-use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Twig_Extension;
-use Twig_SimpleFunction;
 
 /**
  * Render values inside the Twig engine
  */
-class TwigRenderer extends Twig_Extension implements RenderableInterface
+class GenericRenderer implements RenderableInterface
 {
     /** @var TranslatorInterface */
     protected $translator;
@@ -30,36 +26,6 @@ class TwigRenderer extends Twig_Extension implements RenderableInterface
     {
         $this->translator = $translator;
         $this->accessor = $accessor;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFunctions()
-    {
-        return [
-            new Twig_SimpleFunction('render_object_value', [$this, 'renderObjectValue'], ['is_safe' => ['html']]),
-            new Twig_SimpleFunction('render_value', [$this, 'renderValue'], ['is_safe' => ['html']]),
-        ];
-    }
-
-    /**
-     * @param mixed  $object
-     * @param Column $column
-     * @param array  $options
-     *
-     * @return string
-     * @throws \Exception
-     */
-    public function renderObjectValue($object, Column $column, array $options = [])
-    {
-        try {
-            $value = $this->accessor->getValue($object, $column->getPropertyPath());
-
-            return $column->renderValue($value, $options);
-        } catch (UnexpectedTypeException $e) {
-            return false;
-        }
     }
 
     /**
@@ -94,10 +60,10 @@ class TwigRenderer extends Twig_Extension implements RenderableInterface
 
             return (string) $dateFormatter->format($value);
         }
-        if (is_int($value)) {
+        if (\is_int($value)) {
             return (string) $value;
         }
-        if (is_float($value)) {
+        if (\is_float($value)) {
             if (array_key_exists('decimals', $options) || array_key_exists('dec_point', $options) ||
                 array_key_exists('thousands_sep', $options)
             ) {
@@ -111,7 +77,7 @@ class TwigRenderer extends Twig_Extension implements RenderableInterface
 
             return (string) $numberFormatter->format($value);
         }
-        if (is_array($value) || $value instanceof \Traversable) {
+        if (\is_array($value) || $value instanceof \Traversable) {
             $items = [];
             /** @noinspection ForeachSourceInspection */
             foreach ($value as $key => $item) {
@@ -128,7 +94,7 @@ class TwigRenderer extends Twig_Extension implements RenderableInterface
 
             return implode($glue, $items);
         }
-        if (is_bool($value)) {
+        if (\is_bool($value)) {
             return (string) $this->translator->trans($value ? 'sidus.datagrid.boolean.yes' : 'sidus.datagrid.boolean.no');
         }
 

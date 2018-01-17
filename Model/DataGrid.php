@@ -4,7 +4,7 @@ namespace Sidus\DataGridBundle\Model;
 
 use Pagerfanta\Exception\InvalidArgumentException;
 use Sidus\DataGridBundle\Form\Type\LinkType;
-use Sidus\DataGridBundle\Templating\RenderableInterface;
+use Sidus\DataGridBundle\Renderer\RenderableInterface;
 use Sidus\FilterBundle\Query\Handler\QueryHandlerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
