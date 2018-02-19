@@ -63,7 +63,7 @@
         <tr>
             {% for column in datagrid.columns %}
                 <th>
-                    {{ column.label|capitalize }}
+                    {{ column.label|trans|capitalize }}
                     {% if sort[column.sortColumn] is defined %}
                         {{ form_widget(sort[column.sortColumn]) }}
                     {% endif %}

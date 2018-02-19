@@ -36,13 +36,12 @@ class Column
     protected $label;
 
     /**
-     * Column constructor.
-     *
      * @param string   $code
      * @param DataGrid $dataGrid
      * @param array    $options
      *
      * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
+     * @throws \TypeError
      */
     public function __construct($code, DataGrid $dataGrid, array $options = [])
     {
@@ -53,7 +52,6 @@ class Column
             $accessor->setValue($this, $key, $option);
         }
     }
-
 
     /**
      * @return string
