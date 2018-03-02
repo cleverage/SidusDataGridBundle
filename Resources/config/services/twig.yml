@@ -1,6 +1,8 @@
 services:
     sidus_data_grid.twig.rendering:
         class: Sidus\DataGridBundle\Twig\RendererExtension
-        arguments: ['@sidus_data_grid.renderer']
+        arguments:
+            - '@sidus_data_grid.renderer'
+            - '@sidus_data_grid.column_renderer'
         tags:
             - { name: twig.extension }

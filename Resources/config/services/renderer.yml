@@ -4,3 +4,8 @@ services:
         arguments:
             - '@translator'
             - '@property_accessor'
+
+    sidus_data_grid.column_renderer:
+        class: Sidus\DataGridBundle\Renderer\DefaultColumnRenderer
+        arguments:
+            - '@translator'

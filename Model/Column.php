@@ -170,16 +170,10 @@ class Column
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getLabel(): string
+    public function getLabel()
     {
-        if (!$this->label) {
-            return ucfirst(
-                strtolower(trim(preg_replace(['/([A-Z])/', '/[_\s]+/'], ['_$1', ' '], $this->getCode())))
-            );
-        }
-
         return $this->label;
     }
 
