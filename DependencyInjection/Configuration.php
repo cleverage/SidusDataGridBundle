@@ -37,7 +37,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->scalarNode('default_form_theme')->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')->end()
-            ->scalarNode('default_renderer')->defaultValue(new Reference('sidus_data_grid.renderer.twig'))->end()
+            ->scalarNode('default_renderer')->defaultValue(new Reference('sidus_data_grid.renderer'))->end()
             ->append($this->getDataGridConfigTreeBuilder())
             ->variableNode('actions')->defaultValue([])->end()
             ->end();

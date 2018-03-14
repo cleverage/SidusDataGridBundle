@@ -1,6 +1,6 @@
 <?php
 
-namespace Sidus\DataGridBundle\Templating;
+namespace Sidus\DataGridBundle\Renderer;
 
 /**
  * Allows an object to be rendered in a templating engine
