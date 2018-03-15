@@ -36,8 +36,15 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root($this->root);
         $rootNode
             ->children()
-            ->scalarNode('default_form_theme')->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')->end()
-            ->scalarNode('default_renderer')->defaultValue(new Reference('sidus_data_grid.renderer'))->end()
+            ->scalarNode('default_form_theme')
+                ->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')
+            ->end()
+            ->scalarNode('default_template')
+                ->defaultValue('SidusDataGridBundle:Datagrid:template.html.twig')
+            ->end()
+            ->scalarNode('default_renderer')
+                ->defaultValue(new Reference('sidus_data_grid.renderer'))
+            ->end()
             ->append($this->getDataGridConfigTreeBuilder())
             ->variableNode('actions')->defaultValue([])->end()
             ->end();
@@ -78,6 +85,7 @@ class Configuration implements ConfigurationInterface
         $columnDefinition = $dataGridDefinition
             ->variableNode('query_handler')->end()
             ->scalarNode('form_theme')->end()
+            ->scalarNode('template')->end()
             ->scalarNode('parent')->end()
             ->scalarNode('renderer')->end()
             ->variableNode('actions')->end()

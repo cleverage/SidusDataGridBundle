@@ -1,0 +1,88 @@
+{# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
+{# @var viewParameters array #}
+
+{% set form = datagrid.formView %}
+{% form_theme form datagrid.formTheme %}
+{{ form_start(form) }}
+
+{% block filters %}
+    {% if form.filters|length > 0 %}
+        <div class="datagrid-filters">
+            <div class="row">
+                {% for subForm in form.filters %}
+                {{ form_row(subForm) }}
+                {% if loop.index % 3 == 0 %}
+            </div>
+            <div class="row">
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% block filters_actions %}
+                <div class="datagrid-filters-actions btn-group pull-right">
+                    {{ form_widget(datagrid.formView.filterResetButton) }}
+                    {{ form_widget(datagrid.formView.filterSubmitButton) }}
+                </div>
+            {% endblock %}
+            <hr class="clear">
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block datagrid_actions %}
+    <div class="datagrid-actions">
+        <div class="pull-right">
+            {{ pagerfanta(datagrid.queryHandler.pager, 'twitter_bootstrap3') }}
+        </div>
+        <div class="btn-group">
+            {% for action in datagrid.formView.actions %}
+                {{ form_widget(action) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block datagrid_table %}
+    {% set sort = datagrid.formView.sortable %}
+    <table class="table table-striped">
+        {% block datagrid_table_captions %}
+            <caption>{{ datagrid.queryHandler.pager.count }} {{ 'sidus.datagrid.results.label'|trans }}</caption>
+        {% endblock %}
+        {% block datagrid_table_headers %}
+            <thead>
+            <tr>
+                {% for column in datagrid.columns %}
+                    <th>
+                        {{ render_column_label(column) }}
+                        {% if sort[column.sortColumn] is defined %}
+                            {{ form_widget(sort[column.sortColumn]) }}
+                        {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
+            </thead>
+        {% endblock %}
+        {% block datagrid_table_body %}
+            <tbody>
+            {% for result in datagrid.queryHandler.pager %}
+                <tr class="datagrid-row"{% if result.id is defined %} data-entity-id="{{ result.id }}"{% endif %}>
+                    {% for column in datagrid.columns %}
+                        <td>
+                            {% if column.template %}
+                                {% include column.template %}
+                            {% else %}
+                                {{ column.render(result) }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endblock %}
+    </table>
+{% endblock %}
+
+{% if datagrid.queryHandler.pager.count > 10 %}
+    {{ block('datagrid_actions') }}
+{% endif %}
+
+{{ form_end(form) }}

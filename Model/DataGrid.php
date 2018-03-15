@@ -30,6 +30,9 @@ class DataGrid
     /** @var string */
     protected $formTheme;
 
+    /** @var string */
+    protected $template;
+
     /** @var RenderableInterface */
     protected $renderer;
 
@@ -52,12 +55,11 @@ class DataGrid
     protected $resetButton = [];
 
     /**
-     * DataGrid constructor.
-     *
      * @param string $code
      * @param array  $configuration
      *
      * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
+     * @throws \TypeError
      */
     public function __construct(string $code, array $configuration)
     {
@@ -95,7 +97,7 @@ class DataGrid
     /**
      * @param QueryHandlerInterface $queryHandler
      */
-    public function setQueryHandler(QueryHandlerInterface $queryHandler)
+    public function setQueryHandler(QueryHandlerInterface $queryHandler): void
     {
         $this->queryHandler = $queryHandler;
     }
@@ -111,9 +113,25 @@ class DataGrid
     /**
      * @param string $formTheme
      */
-    public function setFormTheme(string $formTheme = null)
+    public function setFormTheme(string $formTheme = null): void
     {
         $this->formTheme = $formTheme;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTemplate(): string
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param string $template
+     */
+    public function setTemplate(string $template): void
+    {
+        $this->template = $template;
     }
 
     /**
@@ -127,7 +145,7 @@ class DataGrid
     /**
      * @param RenderableInterface $renderer
      */
-    public function setRenderer(RenderableInterface $renderer)
+    public function setRenderer(RenderableInterface $renderer): void
     {
         $this->renderer = $renderer;
     }
@@ -143,7 +161,7 @@ class DataGrid
     /**
      * @param Column $column
      */
-    public function addColumn(Column $column)
+    public function addColumn(Column $column): void
     {
         $this->columns[] = $column;
     }
@@ -151,7 +169,7 @@ class DataGrid
     /**
      * @param Column[] $columns
      */
-    public function setColumns(array $columns)
+    public function setColumns(array $columns): void
     {
         $this->columns = $columns;
     }
@@ -194,7 +212,7 @@ class DataGrid
      * @param string $action
      * @param array  $configuration
      */
-    public function setAction(string $action, array $configuration)
+    public function setAction(string $action, array $configuration): void
     {
         $this->actions[$action] = $configuration;
     }
@@ -202,7 +220,7 @@ class DataGrid
     /**
      * @param array $actions
      */
-    public function setActions(array $actions)
+    public function setActions(array $actions): void
     {
         $this->actions = $actions;
     }
@@ -218,7 +236,7 @@ class DataGrid
     /**
      * @param array $submitButton
      */
-    public function setSubmitButton(array $submitButton)
+    public function setSubmitButton(array $submitButton): void
     {
         $this->submitButton = $submitButton;
     }
@@ -234,7 +252,7 @@ class DataGrid
     /**
      * @param array $resetButton
      */
-    public function setResetButton(array $resetButton)
+    public function setResetButton(array $resetButton): void
     {
         $this->resetButton = $resetButton;
     }
@@ -289,7 +307,7 @@ class DataGrid
      *
      * @throws \Exception
      */
-    public function handleRequest(Request $request)
+    public function handleRequest(Request $request): void
     {
         $this->queryHandler->handleRequest($request);
     }
@@ -310,7 +328,7 @@ class DataGrid
      *
      * @throws \UnexpectedValueException
      */
-    public function setActionParameters($action, array $parameters)
+    public function setActionParameters($action, array $parameters): void
     {
         if ($action === 'submit_button') {
             $this->setSubmitButton(
@@ -352,7 +370,7 @@ class DataGrid
      *
      * @throws \Exception
      */
-    protected function buildFilterActions(FormBuilderInterface $builder)
+    protected function buildFilterActions(FormBuilderInterface $builder): void
     {
         if (\count($this->getQueryHandler()->getConfiguration()->getFilters()) > 0) {
             $this->buildResetAction($builder);
@@ -365,7 +383,7 @@ class DataGrid
      *
      * @throws \Exception
      */
-    protected function buildResetAction(FormBuilderInterface $builder)
+    protected function buildResetAction(FormBuilderInterface $builder): void
     {
         $action = $builder->getOption('action');
         $defaults = [
@@ -385,7 +403,7 @@ class DataGrid
      *
      * @throws \Exception
      */
-    protected function buildSubmitAction(FormBuilderInterface $builder)
+    protected function buildSubmitAction(FormBuilderInterface $builder): void
     {
         $defaults = [
             'form_type' => SubmitType::class,
@@ -404,7 +422,7 @@ class DataGrid
     /**
      * @param FormBuilderInterface $builder
      */
-    protected function buildDataGridActions(FormBuilderInterface $builder)
+    protected function buildDataGridActions(FormBuilderInterface $builder): void
     {
         $actionsBuilder = $builder->create(
             'actions',
@@ -426,8 +444,9 @@ class DataGrid
      * @param array  $columnConfiguration
      *
      * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
+     * @throws \TypeError
      */
-    protected function createColumn(string $key, array $columnConfiguration)
+    protected function createColumn(string $key, array $columnConfiguration): void
     {
         $this->columns[] = new Column($key, $this, $columnConfiguration);
     }

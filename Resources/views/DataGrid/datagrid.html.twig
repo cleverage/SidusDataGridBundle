@@ -1,90 +1,36 @@
+{# @deprecated ! Use render_datagrid() twig function instead with the template option #}
 {% macro render(datagrid, viewParameters) %}
-    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
     {% import _self as current %}
-    {% set form = datagrid.formView %}
-
-    {% form_theme form datagrid.formTheme %}
-    {{ form_start(form) }}
-    {% if form.filters|length > 0 %}
-        <div class="datagrid-filters">
-            <div class="row">
-                {% for subForm in form.filters %}
-                {{ form_row(subForm) }}
-                {% if loop.index % 3 == 0 %}
-            </div>
-            <div class="row">
-                {% endif %}
-                {% endfor %}
-            </div>
-            {{ current.filter_actions(datagrid, viewParameters) }}
-            <hr class="clear">
-        </div>
-    {% endif %}
-    {% block datagrid_actions %}
-        {{ current.actions(datagrid, viewParameters) }}
-    {% endblock %}
-
-    {{ current.table(datagrid, viewParameters) }}
-
-    {% if datagrid.queryHandler.pager.count > 10 %}
-        {{ block('datagrid_actions') }}
-    {% endif %}
-    {{ form_end(form) }}
+    {{ current.deprecated() }}
 {% endmacro %}
 
 {% macro filter_actions(datagrid, viewParameters) %}
-    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
-    <div class="datagrid-filters-actions btn-group pull-right">
-        {{ form_widget(datagrid.formView.filterResetButton) }}
-        {{ form_widget(datagrid.formView.filterSubmitButton) }}
-    </div>
+    {% import _self as current %}
+    {{ current.deprecated() }}
 {% endmacro %}
 
 {% macro actions(datagrid, viewParameters) %}
-    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
-    <div class="datagrid-actions">
-        <div class="pull-right">
-            {{ pagerfanta(datagrid.queryHandler.pager, 'twitter_bootstrap3') }}
-        </div>
-        <div class="btn-group">
-            {% for action in datagrid.formView.actions %}
-                {{ form_widget(action) }}
-            {% endfor %}
-        </div>
-    </div>
+    {% import _self as current %}
+    {{ current.deprecated() }}
 {% endmacro %}
 
 {% macro table(datagrid, viewParameters) %}
-    {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
-    {% set sort = datagrid.formView.sortable %}
-    <table class="table table-striped">
-        <caption>{{ datagrid.queryHandler.pager.count }} {{ 'sidus.datagrid.results.label'|trans }}</caption>
-        <thead>
-        <tr>
-            {% for column in datagrid.columns %}
-                <th>
-                    {{ render_column_label(column) }}
-                    {% if sort[column.sortColumn] is defined %}
-                        {{ form_widget(sort[column.sortColumn]) }}
-                    {% endif %}
-                </th>
-            {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for result in datagrid.queryHandler.pager %}
-            <tr class="datagrid-row"{% if result.id is defined %} data-entity-id="{{ result.id }}"{% endif %}>
-                {% for column in datagrid.columns %}
-                    <td>
-                        {% if column.template %}
-                            {% include column.template %}
-                        {% else %}
-                            {{ column.render(result) }}
-                        {% endif %}
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {% import _self as current %}
+    {{ current.deprecated() }}
+{% endmacro %}
+
+{% macro deprecated() %}
+    <div class="alert alert-danger" role="alert">
+        <h3>The usage of this macro is deprecated</h3>
+        <p>
+            Instead of using the render(datagrid, viewParameters) macro, please use the render_datagrid() twig function.
+        </p>
+        <p>
+            Search for 'SidusDataGridBundle:DataGrid:datagrid.html.twig' in your code
+        </p>
+        <p>
+            You can override the template used by this function simply by setting the template option in the datagrid
+            configuration
+        </p>
+    </div>
 {% endmacro %}

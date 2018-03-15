@@ -69,13 +69,16 @@ class SidusDataGridExtension extends Extension
         if (empty($dataGridConfiguration['form_theme'])) {
             $dataGridConfiguration['form_theme'] = $this->globalConfiguration['default_form_theme'];
         }
+        if (empty($dataGridConfiguration['template'])) {
+            $dataGridConfiguration['template'] = $this->globalConfiguration['default_template'];
+        }
         if (empty($dataGridConfiguration['renderer'])) {
             $dataGridConfiguration['renderer'] = $this->globalConfiguration['default_renderer'];
         }
 
         if (isset($dataGridConfiguration['query_handler'])) {
             // Allow either a service or a direct configuration for filters
-            if (is_array($dataGridConfiguration['query_handler'])) {
+            if (\is_array($dataGridConfiguration['query_handler'])) {
                 $dataGridConfiguration['query_handler'] = $this->finalizeFilterConfiguration(
                     $code,
                     $dataGridConfiguration['query_handler']
