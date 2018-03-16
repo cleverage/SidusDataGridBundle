@@ -40,7 +40,7 @@ class Configuration implements ConfigurationInterface
                 ->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')
             ->end()
             ->scalarNode('default_template')
-                ->defaultValue('SidusDataGridBundle:Datagrid:template.html.twig')
+                ->defaultValue('SidusDataGridBundle:DataGrid:template.html.twig')
             ->end()
             ->scalarNode('default_renderer')
                 ->defaultValue(new Reference('sidus_data_grid.renderer'))

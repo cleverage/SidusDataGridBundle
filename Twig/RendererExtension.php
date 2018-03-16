@@ -46,7 +46,7 @@ class RendererExtension extends Twig_Extension
         return [
             new Twig_SimpleFunction(
                 'render_datagrid',
-                [$this, 'renderDatagrid'],
+                [$this, 'renderDataGrid'],
                 ['is_safe' => ['html']]
             ),
             new Twig_SimpleFunction(
@@ -72,7 +72,7 @@ class RendererExtension extends Twig_Extension
      *
      * @return string
      */
-    public function renderDatagrid(DataGrid $dataGrid, array $viewParameters = []): string
+    public function renderDataGrid(DataGrid $dataGrid, array $viewParameters = []): string
     {
         return $this->twig->render(
             $dataGrid->getTemplate(),
