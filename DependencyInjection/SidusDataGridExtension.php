@@ -2,12 +2,11 @@
 
 namespace Sidus\DataGridBundle\DependencyInjection;
 
+use Sidus\BaseBundle\DependencyInjection\SidusBaseExtension;
 use Sidus\FilterBundle\DependencyInjection\Configuration as FilterConfiguration;
-use Sidus\FilterBundle\DependencyInjection\Loader\ServiceLoader;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use UnexpectedValueException;
 
 /**
@@ -15,7 +14,7 @@ use UnexpectedValueException;
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
  */
-class SidusDataGridExtension extends Extension
+class SidusDataGridExtension extends SidusBaseExtension
 {
     /** @var array */
     protected $globalConfiguration;
@@ -27,8 +26,7 @@ class SidusDataGridExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $loader = new ServiceLoader(__DIR__.'/../Resources/config/services');
-        $loader->loadFiles($container);
+        parent::load($configs, $container);
 
         $configuration = $this->createConfigurationParser();
         $this->globalConfiguration = $this->processConfiguration($configuration, $configs);

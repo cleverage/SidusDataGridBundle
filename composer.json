@@ -22,6 +22,7 @@
         }
     },
     "require": {
-        "sidus/filter-bundle": "dev-v1.3-dev"
+        "sidus/filter-bundle": "dev-v1.3-dev",
+        "sidus/base-bundle": "~1.0"
     }
 }
