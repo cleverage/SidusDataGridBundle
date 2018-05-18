@@ -1,0 +1,9 @@
+services:
+    sidus_data_grid.registry.datagrid:
+        alias: Sidus\DataGridBundle\Registry\DataGridRegistry
+
+    sidus_data_grid.renderer:
+        alias: Sidus\DataGridBundle\Renderer\GenericRenderer
+
+    sidus_data_grid.column_renderer:
+        alias: Sidus\DataGridBundle\Renderer\DefaultColumnRenderer

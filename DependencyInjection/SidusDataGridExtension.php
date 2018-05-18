@@ -1,8 +1,17 @@
 <?php
+/*
+ * This file is part of the Sidus/DataGridBundle package.
+ *
+ * Copyright (c) 2015-2018 Vincent Chalnot
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Sidus\DataGridBundle\DependencyInjection;
 
 use Sidus\BaseBundle\DependencyInjection\SidusBaseExtension;
+use Sidus\DataGridBundle\Registry\DataGridRegistry;
 use Sidus\FilterBundle\DependencyInjection\Configuration as FilterConfiguration;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -13,6 +22,8 @@ use UnexpectedValueException;
  * This is the class that loads and manages your bundle configuration
  *
  * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
+ *
+ * @author Vincent Chalnot <vincent@sidus.fr>
  */
 class SidusDataGridExtension extends SidusBaseExtension
 {
@@ -31,7 +42,7 @@ class SidusDataGridExtension extends SidusBaseExtension
         $configuration = $this->createConfigurationParser();
         $this->globalConfiguration = $this->processConfiguration($configuration, $configs);
 
-        $dataGridRegistry = $container->getDefinition('sidus_data_grid.registry.datagrid');
+        $dataGridRegistry = $container->getDefinition(DataGridRegistry::class);
         foreach ((array) $this->globalConfiguration['configurations'] as $code => $dataGridConfiguration) {
             $dataGridConfiguration = $this->finalizeConfiguration($code, $dataGridConfiguration);
             $dataGridRegistry->addMethodCall('addRawDataGridConfiguration', [$code, $dataGridConfiguration]);
