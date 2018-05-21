@@ -47,9 +47,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root($this->root);
         $rootNode
             ->children()
-            ->scalarNode('default_form_theme')
-                ->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')
-            ->end()
+            ->scalarNode('default_form_theme')->defaultNull()->end()
             ->scalarNode('default_template')
                 ->defaultValue('SidusDataGridBundle:DataGrid:template.html.twig')
             ->end()

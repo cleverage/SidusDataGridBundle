@@ -35,7 +35,7 @@ class DataGrid
     /** @var QueryHandlerInterface */
     protected $queryHandler;
 
-    /** @var string */
+    /** @var string|null */
     protected $formTheme;
 
     /** @var string */
@@ -111,9 +111,9 @@ class DataGrid
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFormTheme(): string
+    public function getFormTheme(): ?string
     {
         return $this->formTheme;
     }
