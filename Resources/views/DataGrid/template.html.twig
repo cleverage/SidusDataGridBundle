@@ -2,7 +2,9 @@
 {# @var viewParameters array #}
 
 {% set form = datagrid.formView %}
-{% form_theme form datagrid.formTheme %}
+{% if datagrid.formTheme %}
+    {% form_theme form datagrid.formTheme %}
+{% endif %}
 {{ form_start(form) }}
 
 {% block filters %}
@@ -10,7 +12,9 @@
         <div class="datagrid-filters">
             <div class="row">
                 {% for subForm in form.filters %}
-                {{ form_row(subForm) }}
+                <div class="col-md-4">
+                    {{ form_row(subForm) }}
+                </div>
                 {% if loop.index % 3 == 0 %}
             </div>
             <div class="row">

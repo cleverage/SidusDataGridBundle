@@ -1,11 +1,14 @@
 services:
-    sidus_data_grid.renderer:
-        class: Sidus\DataGridBundle\Renderer\GenericRenderer
-        arguments:
-            - '@translator'
-            - '@property_accessor'
+    Sidus\DataGridBundle\Renderer\RenderableInterface:
+        alias: Sidus\DataGridBundle\Renderer\GenericRenderer
 
-    sidus_data_grid.column_renderer:
-        class: Sidus\DataGridBundle\Renderer\DefaultColumnRenderer
-        arguments:
-            - '@translator'
+    Sidus\DataGridBundle\Renderer\GenericRenderer:
+        autowire: true
+        public: false
+
+    Sidus\DataGridBundle\Renderer\ColumnRendererInterface:
+        alias: Sidus\DataGridBundle\Renderer\DefaultColumnRenderer
+
+    Sidus\DataGridBundle\Renderer\DefaultColumnRenderer:
+        autowire: true
+        public: false

@@ -1,7 +1,16 @@
 <?php
+/*
+ * This file is part of the Sidus/DataGridBundle package.
+ *
+ * Copyright (c) 2015-2018 Vincent Chalnot
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Sidus\DataGridBundle\DependencyInjection;
 
+use Sidus\DataGridBundle\Renderer\RenderableInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -13,6 +22,8 @@ use Symfony\Component\DependencyInjection\Reference;
  *
  * To learn more see {@link
  * http://symfony.com/doc/current/cookbook/bundles/extension.html#cookbook-bundles-extension-config-class}
+ *
+ * @author Vincent Chalnot <vincent@sidus.fr>
  */
 class Configuration implements ConfigurationInterface
 {
@@ -36,14 +47,12 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root($this->root);
         $rootNode
             ->children()
-            ->scalarNode('default_form_theme')
-                ->defaultValue('SidusDataGridBundle:Form:filter_theme.html.twig')
-            ->end()
+            ->scalarNode('default_form_theme')->defaultNull()->end()
             ->scalarNode('default_template')
                 ->defaultValue('SidusDataGridBundle:DataGrid:template.html.twig')
             ->end()
             ->scalarNode('default_renderer')
-                ->defaultValue(new Reference('sidus_data_grid.renderer'))
+                ->defaultValue(new Reference(RenderableInterface::class))
             ->end()
             ->append($this->getDataGridConfigTreeBuilder())
             ->variableNode('actions')->defaultValue([])->end()

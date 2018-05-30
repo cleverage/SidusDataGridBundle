@@ -19,7 +19,7 @@
             {% if icon is not empty %}
                 <i class="fa fa-{{ icon }}"></i>
             {% endif %}
-            {{ label|trans({}, translation_domain) }}
+            {{ label|trans({}, translation_domain)|raw }}
         </a>
     {% endspaceless %}
 {% endblock %}
