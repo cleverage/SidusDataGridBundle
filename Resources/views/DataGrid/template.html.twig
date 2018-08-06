@@ -25,8 +25,12 @@
             </div>
             {% block filters_actions %}
                 <div class="datagrid-filters-actions btn-group pull-right">
-                    {{ form_widget(datagrid.formView.filterResetButton) }}
-                    {{ form_widget(datagrid.formView.filterSubmitButton) }}
+                    {% if datagrid.formView.filterResetButton is defined %}
+                        {{ form_widget(datagrid.formView.filterResetButton) }}
+                    {% endif %}
+                    {% if datagrid.formView.filterSubmitButton is defined %}
+                        {{ form_widget(datagrid.formView.filterSubmitButton) }}
+                    {% endif %}
                 </div>
             {% endblock %}
             <hr class="clear">
@@ -58,9 +62,10 @@
             <tr>
                 {% for column in datagrid.columns %}
                     <th>
-                        {{ render_column_label(column) }}
                         {% if sort[column.sortColumn] is defined %}
-                            {{ form_widget(sort[column.sortColumn]) }}
+                            {{ form_widget(sort[column.sortColumn], {label: render_column_label(column)}) }}
+                        {% else %}
+                            {{ render_column_label(column) }}
                         {% endif %}
                     </th>
                 {% endfor %}
