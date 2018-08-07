@@ -35,7 +35,6 @@ class LinkType extends AbstractType
         $view->vars['route'] = $options['route'];
         $view->vars['route_parameters'] = $options['route_parameters'];
         $view->vars['uri'] = $options['uri'];
-        $view->vars['icon'] = $options['icon'];
     }
 
     /**
@@ -52,7 +51,9 @@ class LinkType extends AbstractType
                 'route' => null,
                 'route_parameters' => [],
                 'uri' => null,
-                'icon' => null,
+                'attr' => [
+                    'class' => 'btn btn-default btn-light',
+                ],
             ]
         );
         $resolver->setAllowedTypes('route_parameters', 'array');

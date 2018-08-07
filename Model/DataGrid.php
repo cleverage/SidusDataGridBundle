@@ -398,7 +398,6 @@ class DataGrid
             'form_type' => LinkType::class,
             'label' => 'sidus.datagrid.reset.label',
             'uri' => $action ?: '?',
-            'icon' => 'undo',
         ];
         $options = array_merge($defaults, $this->getResetButton());
         $type = $options['form_type'];
@@ -416,7 +415,6 @@ class DataGrid
         $defaults = [
             'form_type' => SubmitType::class,
             'label' => 'sidus.datagrid.submit.label',
-            'icon' => 'filter',
             'attr' => [
                 'class' => 'btn-primary',
             ],

@@ -5,7 +5,7 @@ sidus:
         submit:
             label: Submit
         results:
-            label: results
+            label: '%first%-%last% of %count%'
         boolean:
             yes: Yes
             no: No

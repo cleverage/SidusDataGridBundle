@@ -42,7 +42,10 @@ class DefaultColumnRenderer implements ColumnRendererInterface
         $label = $column->getLabel();
         if (!$label) {
             $key = "datagrid.{$column->getDataGrid()->getCode()}.{$column->getCode()}";
-            if ($this->translator instanceof TranslatorBagInterface && $this->translator->getCatalogue()->has($key)) {
+            if ($this->translator instanceof TranslatorBagInterface
+                && $this->translator->getCatalogue()
+                && $this->translator->getCatalogue()->has($key)
+            ) {
                 $label = $key;
             } else {
                 $label = ucfirst(

@@ -1,0 +1,112 @@
+{# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
+{# @var viewParameters array #}
+{# @var pager \Pagerfanta\Pagerfanta #}
+{% set pager = datagrid.queryHandler.pager %}
+
+{% set form = datagrid.formView %}
+{% if datagrid.formTheme %}
+    {% form_theme form datagrid.formTheme %}
+{% endif %}
+{{ form_start(form) }}
+
+{% block filters %}
+    {% if form.filters|length > 0 %}
+        <div class="row">
+        {% for subForm in form.filters %}
+            <div class="col-md-4">
+                {{ form_row(subForm) }}
+            </div>
+            {% if loop.index % 3 == 0 %}
+                </div>
+                <div class="row">
+            {% endif %}
+        {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block action_menu %}
+    <div class="d-flex justify-content-between mb-3 sticky-top bg-white">
+        <div class="p-2">
+            {% block datagrid_actions %}
+                <div class="btn-group">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group mr-2" role="group">
+                            {% block datagrid_count %}
+                                <span class="input-group-text bg-white">
+                                    {{ 'sidus.datagrid.results.label'|trans({
+                                        '%first%': pager.currentPageOffsetStart,
+                                        '%last%': pager.currentPageOffsetEnd,
+                                        '%count%': pager.count,
+                                    }) }}
+                                </span>
+                            {% endblock %}
+                        </div>
+                        <div class="btn-group" role="group">
+                            {% for action in datagrid.formView.actions %}
+                                {{ form_widget(action) }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+        <div class="p-2">
+            {% block pagination %}
+                {{ pagerfanta(pager, 'twitter_bootstrap4', {css_container_class: 'pagination m-0'}) }}
+            {% endblock %}
+        </div>
+        <div class="p-2">
+            {% block filters_actions %}
+                <div class="btn-group">
+                    {% if datagrid.formView.filterResetButton is defined %}
+                        {{ form_widget(datagrid.formView.filterResetButton) }}
+                    {% endif %}
+                    {% if datagrid.formView.filterSubmitButton is defined %}
+                        {{ form_widget(datagrid.formView.filterSubmitButton) }}
+                    {% endif %}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block datagrid_table %}
+    {% set sort = datagrid.formView.sortable %}
+    <table class="table">
+        {% block datagrid_table_headers %}
+            <thead>
+            <tr>
+                {% for column in datagrid.columns %}
+                    <th>
+                        {% if sort[column.sortColumn] is defined %}
+                            {{ form_widget(sort[column.sortColumn], {label: render_column_label(column)}) }}
+                        {% else %}
+                            {{ render_column_label(column) }}
+                        {% endif %}
+                    </th>
+                {% endfor %}
+            </tr>
+            </thead>
+        {% endblock %}
+        {% block datagrid_table_body %}
+            <tbody>
+            {% for result in pager %}
+                <tr class="datagrid-row"{% if result.id is defined %} data-entity-id="{{ result.id }}"{% endif %}>
+                    {% for column in datagrid.columns %}
+                        <td>
+                            {% if column.template %}
+                                {% include column.template %}
+                            {% else %}
+                                {{ column.render(result) }}
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endblock %}
+    </table>
+{% endblock %}
+
+{{ form_end(form) }}

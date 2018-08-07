@@ -211,12 +211,8 @@ class Column
             $options
         );
         $accessor = PropertyAccess::createPropertyAccessor();
-        try {
-            $value = $accessor->getValue($object, $this->getPropertyPath());
+        $value = $accessor->getValue($object, $this->getPropertyPath());
 
-            return $this->getRenderer()->renderValue($value, $options);
-        } catch (ExceptionInterface $e) {
-            return false;
-        }
+        return $this->getRenderer()->renderValue($value, $options);
     }
 }
