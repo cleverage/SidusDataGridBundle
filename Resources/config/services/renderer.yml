@@ -1,14 +1,14 @@
 services:
-    Sidus\DataGridBundle\Renderer\RenderableInterface:
-        alias: Sidus\DataGridBundle\Renderer\GenericRenderer
+    Sidus\DataGridBundle\Renderer\ColumnValueRendererInterface:
+        alias: Sidus\DataGridBundle\Renderer\DefaultColumnValueRenderer
 
-    Sidus\DataGridBundle\Renderer\GenericRenderer:
+    Sidus\DataGridBundle\Renderer\DefaultColumnValueRenderer:
         autowire: true
         public: false
 
-    Sidus\DataGridBundle\Renderer\ColumnRendererInterface:
-        alias: Sidus\DataGridBundle\Renderer\DefaultColumnRenderer
+    Sidus\DataGridBundle\Renderer\ColumnLabelRendererInterface:
+        alias: Sidus\DataGridBundle\Renderer\DefaultColumnLabelRenderer
 
-    Sidus\DataGridBundle\Renderer\DefaultColumnRenderer:
+    Sidus\DataGridBundle\Renderer\DefaultColumnLabelRenderer:
         autowire: true
         public: false

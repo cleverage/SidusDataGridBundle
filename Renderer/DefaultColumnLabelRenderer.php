@@ -19,7 +19,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  *
  * @author Vincent Chalnot <vincent@sidus.fr>
  */
-class DefaultColumnRenderer implements ColumnRendererInterface
+class DefaultColumnLabelRenderer implements ColumnLabelRendererInterface
 {
     /** @var TranslatorInterface */
     protected $translator;

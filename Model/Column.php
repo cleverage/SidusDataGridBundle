@@ -10,8 +10,8 @@
 
 namespace Sidus\DataGridBundle\Model;
 
-use Sidus\DataGridBundle\Renderer\RenderableInterface;
-use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
+use Sidus\DataGridBundle\Renderer\ColumnLabelRendererInterface;
+use Sidus\DataGridBundle\Renderer\ColumnValueRendererInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -36,8 +36,11 @@ class Column
     /** @var string */
     protected $propertyPath;
 
-    /** @var RenderableInterface */
-    protected $renderer;
+    /** @var ColumnValueRendererInterface */
+    protected $valueRenderer;
+
+    /** @var ColumnLabelRendererInterface */
+    protected $labelRenderer;
 
     /** @var array */
     protected $formattingOptions = [];
@@ -74,7 +77,7 @@ class Column
     /**
      * @param string $code
      */
-    public function setCode(string $code)
+    public function setCode(string $code): void
     {
         $this->code = $code;
     }
@@ -90,7 +93,7 @@ class Column
     /**
      * @return string|null
      */
-    public function getTemplate()
+    public function getTemplate(): ?string
     {
         return $this->template;
     }
@@ -98,7 +101,7 @@ class Column
     /**
      * @param string $template
      */
-    public function setTemplate(string $template)
+    public function setTemplate(string $template): void
     {
         $this->template = $template;
     }
@@ -118,7 +121,7 @@ class Column
     /**
      * @param string $sortColumn
      */
-    public function setSortColumn(string $sortColumn)
+    public function setSortColumn(string $sortColumn): void
     {
         $this->sortColumn = $sortColumn;
     }
@@ -138,29 +141,49 @@ class Column
     /**
      * @param string $propertyPath
      */
-    public function setPropertyPath(string $propertyPath)
+    public function setPropertyPath(string $propertyPath): void
     {
         $this->propertyPath = $propertyPath;
     }
 
     /**
-     * @return RenderableInterface
+     * @return ColumnValueRendererInterface
      */
-    public function getRenderer(): RenderableInterface
+    public function getValueRenderer(): ColumnValueRendererInterface
     {
-        if (!$this->renderer) {
-            return $this->getDataGrid()->getRenderer();
+        if (!$this->valueRenderer) {
+            return $this->getDataGrid()->getColumnValueRenderer();
         }
 
-        return $this->renderer;
+        return $this->valueRenderer;
     }
 
     /**
-     * @param RenderableInterface $renderer
+     * @param ColumnValueRendererInterface $valueRenderer
      */
-    public function setRenderer(RenderableInterface $renderer)
+    public function setValueRenderer(ColumnValueRendererInterface $valueRenderer): void
     {
-        $this->renderer = $renderer;
+        $this->valueRenderer = $valueRenderer;
+    }
+
+    /**
+     * @return ColumnLabelRendererInterface
+     */
+    public function getLabelRenderer(): ColumnLabelRendererInterface
+    {
+        if (null === $this->labelRenderer) {
+            return $this->getDataGrid()->getColumnLabelRenderer();
+        }
+
+        return $this->labelRenderer;
+    }
+
+    /**
+     * @param ColumnLabelRendererInterface $labelRenderer
+     */
+    public function setLabelRenderer(ColumnLabelRendererInterface $labelRenderer): void
+    {
+        $this->labelRenderer = $labelRenderer;
     }
 
     /**
@@ -174,15 +197,15 @@ class Column
     /**
      * @param array $formattingOptions
      */
-    public function setFormattingOptions(array $formattingOptions)
+    public function setFormattingOptions(array $formattingOptions): void
     {
         $this->formattingOptions = $formattingOptions;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getLabel()
+    public function getLabel(): ?string
     {
         return $this->label;
     }
@@ -190,7 +213,7 @@ class Column
     /**
      * @param string $label
      */
-    public function setLabel(string $label)
+    public function setLabel(string $label): void
     {
         $this->label = $label;
     }
@@ -201,9 +224,9 @@ class Column
      * @param mixed $object
      * @param array $options
      *
-     * @return string|boolean
+     * @return string
      */
-    public function render($object, array $options = [])
+    public function renderValue($object, array $options = []): string
     {
         $options = array_merge(
             ['column' => $this, 'object' => $object],
@@ -213,6 +236,14 @@ class Column
         $accessor = PropertyAccess::createPropertyAccessor();
         $value = $accessor->getValue($object, $this->getPropertyPath());
 
-        return $this->getRenderer()->renderValue($value, $options);
+        return $this->getValueRenderer()->renderValue($value, $options);
+    }
+
+    /**
+     * @return string
+     */
+    public function renderLabel(): string
+    {
+        return $this->getLabelRenderer()->renderColumnLabel($this);
     }
 }

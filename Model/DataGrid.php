@@ -12,7 +12,8 @@ namespace Sidus\DataGridBundle\Model;
 
 use Pagerfanta\Exception\InvalidArgumentException;
 use Sidus\DataGridBundle\Form\Type\LinkType;
-use Sidus\DataGridBundle\Renderer\RenderableInterface;
+use Sidus\DataGridBundle\Renderer\ColumnLabelRendererInterface;
+use Sidus\DataGridBundle\Renderer\ColumnValueRendererInterface;
 use Sidus\FilterBundle\Query\Handler\QueryHandlerInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -41,8 +42,11 @@ class DataGrid
     /** @var string */
     protected $template;
 
-    /** @var RenderableInterface */
-    protected $renderer;
+    /** @var ColumnValueRendererInterface */
+    protected $columnValueRenderer;
+
+    /** @var ColumnLabelRendererInterface */
+    protected $columnLabelRenderer;
 
     /** @var Column[] */
     protected $columns = [];
@@ -143,19 +147,35 @@ class DataGrid
     }
 
     /**
-     * @return RenderableInterface
+     * @return ColumnValueRendererInterface
      */
-    public function getRenderer(): RenderableInterface
+    public function getColumnValueRenderer(): ColumnValueRendererInterface
     {
-        return $this->renderer;
+        return $this->columnValueRenderer;
     }
 
     /**
-     * @param RenderableInterface $renderer
+     * @param ColumnValueRendererInterface $columnValueRenderer
      */
-    public function setRenderer(RenderableInterface $renderer): void
+    public function setColumnValueRenderer(ColumnValueRendererInterface $columnValueRenderer): void
     {
-        $this->renderer = $renderer;
+        $this->columnValueRenderer = $columnValueRenderer;
+    }
+
+    /**
+     * @return ColumnLabelRendererInterface
+     */
+    public function getColumnLabelRenderer(): ColumnLabelRendererInterface
+    {
+        return $this->columnLabelRenderer;
+    }
+
+    /**
+     * @param ColumnLabelRendererInterface $columnLabelRenderer
+     */
+    public function setColumnLabelRenderer(ColumnLabelRendererInterface $columnLabelRenderer): void
+    {
+        $this->columnLabelRenderer = $columnLabelRenderer;
     }
 
     /**
@@ -318,6 +338,16 @@ class DataGrid
     public function handleRequest(Request $request): void
     {
         $this->queryHandler->handleRequest($request);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @throws \Exception
+     */
+    public function handleArray(Request $request): void
+    {
+        $this->queryHandler->handleArray($request);
     }
 
     /**

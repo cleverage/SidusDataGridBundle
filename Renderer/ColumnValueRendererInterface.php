@@ -10,19 +10,18 @@
 
 namespace Sidus\DataGridBundle\Renderer;
 
-use Sidus\DataGridBundle\Model\Column;
-
 /**
  * Allows an object to be rendered in a templating engine
  *
  * @author Vincent Chalnot <vincent@sidus.fr>
  */
-interface ColumnRendererInterface
+interface ColumnValueRendererInterface
 {
     /**
-     * @param Column $column
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
-    public function renderColumnLabel(Column $column): string;
+    public function renderValue($value, array $options = []): string;
 }

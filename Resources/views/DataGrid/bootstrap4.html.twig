@@ -1,5 +1,4 @@
 {# @var datagrid \Sidus\DataGridBundle\Model\DataGrid #}
-{# @var viewParameters array #}
 {# @var pager \Pagerfanta\Pagerfanta #}
 {% set pager = datagrid.queryHandler.pager %}
 
@@ -11,16 +10,15 @@
 
 {% block filters %}
     {% if form.filters|length > 0 %}
+        {% set num_columns = num_columns|default(3) %}
         <div class="row">
-        {% for subForm in form.filters %}
-            <div class="col-md-4">
-                {{ form_row(subForm) }}
-            </div>
-            {% if loop.index % 3 == 0 %}
+            {% for column in get_filter_columns(form.filters, num_columns) %}
+                <div class="col-md-{{ 12 // num_columns }}">
+                    {% for cell in column %}
+                        {{ form_row(cell) }}
+                    {% endfor %}
                 </div>
-                <div class="row">
-            {% endif %}
-        {% endfor %}
+            {% endfor %}
         </div>
     {% endif %}
 {% endblock %}
@@ -80,9 +78,9 @@
                 {% for column in datagrid.columns %}
                     <th>
                         {% if sort[column.sortColumn] is defined %}
-                            {{ form_widget(sort[column.sortColumn], {label: render_column_label(column)}) }}
+                            {{ form_widget(sort[column.sortColumn], {label: column.renderLabel}) }}
                         {% else %}
-                            {{ render_column_label(column) }}
+                            {{ column.renderLabel }}
                         {% endif %}
                     </th>
                 {% endfor %}
@@ -98,7 +96,7 @@
                             {% if column.template %}
                                 {% include column.template %}
                             {% else %}
-                                {{ column.render(result) }}
+                                {{ column.renderValue(result) }}
                             {% endif %}
                         </td>
                     {% endfor %}

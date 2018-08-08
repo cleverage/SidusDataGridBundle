@@ -10,7 +10,8 @@
 
 namespace Sidus\DataGridBundle\DependencyInjection;
 
-use Sidus\DataGridBundle\Renderer\RenderableInterface;
+use Sidus\DataGridBundle\Renderer\ColumnLabelRendererInterface;
+use Sidus\DataGridBundle\Renderer\ColumnValueRendererInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -27,7 +28,11 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class Configuration implements ConfigurationInterface
 {
+    /** @var string */
     protected $root;
+
+    /** @var \Closure */
+    protected $serviceResolver;
 
     /**
      * @param string $root
@@ -35,6 +40,9 @@ class Configuration implements ConfigurationInterface
     public function __construct($root = 'sidus_data_grid')
     {
         $this->root = $root;
+        $this->serviceResolver = function ($reference) {
+            return new Reference(ltrim($reference, '@'));
+        };
     }
 
     /**
@@ -48,14 +56,19 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->scalarNode('default_form_theme')->defaultNull()->end()
-            ->scalarNode('default_template')
-                ->defaultValue('SidusDataGridBundle:DataGrid:bootstrap4.html.twig')
+            ->scalarNode('default_datagrid_template')
+            ->defaultValue('SidusDataGridBundle:DataGrid:bootstrap4.html.twig')
             ->end()
-            ->scalarNode('default_renderer')
-                ->defaultValue(new Reference(RenderableInterface::class))
+            ->variableNode('default_column_value_renderer')
+            ->defaultValue(new Reference(ColumnValueRendererInterface::class))
+            ->beforeNormalization()->always($this->serviceResolver)->end()
             ->end()
-            ->append($this->getDataGridConfigTreeBuilder())
+            ->variableNode('default_column_label_renderer')
+            ->defaultValue(new Reference(ColumnLabelRendererInterface::class))
+            ->beforeNormalization()->always($this->serviceResolver)->end()
+            ->end()
             ->variableNode('actions')->defaultValue([])->end()
+            ->append($this->getDataGridConfigTreeBuilder())
             ->end();
 
         return $treeBuilder;
@@ -96,7 +109,12 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('form_theme')->end()
             ->scalarNode('template')->end()
             ->scalarNode('parent')->end()
-            ->scalarNode('renderer')->end()
+            ->scalarNode('column_value_renderer')
+            ->beforeNormalization()->always($this->serviceResolver)->end()
+            ->end()
+            ->scalarNode('column_label_renderer')
+            ->beforeNormalization()->always($this->serviceResolver)->end()
+            ->end()
             ->variableNode('actions')->end()
             ->variableNode('submit_button')->end()
             ->variableNode('reset_button')->end()
@@ -122,7 +140,12 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('sort_column')->end()
             ->scalarNode('property_path')->end()
             ->scalarNode('label')->end()
-            ->scalarNode('renderer')->end()
+            ->scalarNode('label_renderer')
+            ->beforeNormalization()->always($this->serviceResolver)->end()
+            ->end()
+            ->variableNode('value_renderer')
+            ->beforeNormalization()->always($this->serviceResolver)->end()
+            ->end()
             ->variableNode('formatting_options')->end();
     }
 }

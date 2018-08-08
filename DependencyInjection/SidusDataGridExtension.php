@@ -79,10 +79,13 @@ class SidusDataGridExtension extends SidusBaseExtension
             $dataGridConfiguration['form_theme'] = $this->globalConfiguration['default_form_theme'];
         }
         if (empty($dataGridConfiguration['template'])) {
-            $dataGridConfiguration['template'] = $this->globalConfiguration['default_template'];
+            $dataGridConfiguration['template'] = $this->globalConfiguration['default_datagrid_template'];
         }
-        if (empty($dataGridConfiguration['renderer'])) {
-            $dataGridConfiguration['renderer'] = $this->globalConfiguration['default_renderer'];
+        if (empty($dataGridConfiguration['column_value_renderer'])) {
+            $dataGridConfiguration['column_value_renderer'] = $this->globalConfiguration['default_column_value_renderer'];
+        }
+        if (empty($dataGridConfiguration['column_label_renderer'])) {
+            $dataGridConfiguration['column_label_renderer'] = $this->globalConfiguration['default_column_label_renderer'];
         }
 
         if (isset($dataGridConfiguration['query_handler'])) {
