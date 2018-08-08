@@ -21,5 +21,3 @@ That being said, if you have only a few datagrids and need to heavily customize 
  - [01 - Installation](Documentation/01-install.md)
  - [02 - Configuration](Documentation/02-configuration.md)
  - [03 - Usage](Documentation/03-usage.md)
- - [04 - Internals](Documentation/04-internals.md)
- - [05 - Customization](Documentation/05-customization.md)
