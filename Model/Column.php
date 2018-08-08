@@ -12,6 +12,7 @@ namespace Sidus\DataGridBundle\Model;
 
 use Sidus\DataGridBundle\Renderer\ColumnLabelRendererInterface;
 use Sidus\DataGridBundle\Renderer\ColumnValueRendererInterface;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 
 /**
@@ -234,7 +235,11 @@ class Column
             $options
         );
         $accessor = PropertyAccess::createPropertyAccessor();
-        $value = $accessor->getValue($object, $this->getPropertyPath());
+        try {
+            $value = $accessor->getValue($object, $this->getPropertyPath());
+        } catch (UnexpectedTypeException $e) {
+            return '';
+        }
 
         return $this->getValueRenderer()->renderValue($value, $options);
     }
