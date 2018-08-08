@@ -54,7 +54,13 @@
     {% set sort = datagrid.formView.sortable %}
     <table class="table table-striped">
         {% block datagrid_table_captions %}
-            <caption>{{ pager.count }} {{ 'sidus.datagrid.results.label'|trans }}</caption>
+            <caption>
+                {{ 'sidus.datagrid.results.label'|trans({
+                    '%first%': pager.currentPageOffsetStart,
+                    '%last%': pager.currentPageOffsetEnd,
+                    '%count%': pager.count,
+                }) }}
+            </caption>
         {% endblock %}
         {% block datagrid_table_headers %}
             <thead>
