@@ -94,7 +94,7 @@
                     {% for column in datagrid.columns %}
                         <td>
                             {% if column.template %}
-                                {% include column.template %}
+                                {% include column.template with column.templateVars %}
                             {% else %}
                                 {{ column.renderValue(result) }}
                             {% endif %}

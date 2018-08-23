@@ -65,6 +65,7 @@ class RendererExtension extends Twig_Extension
      */
     public function renderDataGrid(DataGrid $dataGrid, array $viewParameters = []): string
     {
+        $viewParameters = array_merge($dataGrid->getTemplateVars(), $viewParameters);
         $viewParameters['datagrid'] = $dataGrid;
 
         return $this->twig->render($dataGrid->getTemplate(), $viewParameters);

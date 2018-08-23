@@ -42,6 +42,9 @@ class DataGrid
     /** @var string */
     protected $template;
 
+    /** @var array */
+    protected $templateVars = [];
+
     /** @var ColumnValueRendererInterface */
     protected $columnValueRenderer;
 
@@ -144,6 +147,22 @@ class DataGrid
     public function setTemplate(string $template): void
     {
         $this->template = $template;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTemplateVars(): array
+    {
+        return $this->templateVars;
+    }
+
+    /**
+     * @param array $templateVars
+     */
+    public function setTemplateVars(array $templateVars): void
+    {
+        $this->templateVars = $templateVars;
     }
 
     /**

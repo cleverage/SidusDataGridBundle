@@ -31,6 +31,9 @@ class Column
     /** @var string */
     protected $template;
 
+    /** @var array */
+    protected $templateVars = [];
+
     /** @var string */
     protected $sortColumn;
 
@@ -105,6 +108,22 @@ class Column
     public function setTemplate(string $template): void
     {
         $this->template = $template;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTemplateVars(): array
+    {
+        return $this->templateVars;
+    }
+
+    /**
+     * @param array $templateVars
+     */
+    public function setTemplateVars(array $templateVars): void
+    {
+        $this->templateVars = $templateVars;
     }
 
     /**

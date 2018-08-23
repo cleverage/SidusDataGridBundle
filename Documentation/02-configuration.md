@@ -76,6 +76,11 @@ sidus_data_grid:
 
             # Template used to render the datagrid
             template: ~ # Default to default_datagrid_template
+            
+            # Here you can pass static variables to the datagrid template
+            template_vars: # This is a variable node
+                # This can be used to configure some behaviors in your datagrid template
+                var1: value
 
             # Renderer service id used to render columns values
             column_value_renderer: ~ # Default to default_column_value_renderer
@@ -126,6 +131,11 @@ sidus_data_grid:
                     # Use a simple twig template to render the column
                     template: ~ # Use {{ column.render(result) }} to render the result inside the template
                     # /!\ This option has nothing to do with the 'template' option at the datagrid level
+                    
+                    # Here you can pass static variables to the column template
+                    template_vars: # This is a variable node
+                        # This can be used to configure some behaviors in your column template
+                        var1: value
 
                     # This can override the actual property the column renderer will try to resolve
                     property_path: ~ # Default to the column code

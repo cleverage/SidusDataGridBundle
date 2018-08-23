@@ -108,6 +108,7 @@ class Configuration implements ConfigurationInterface
             ->variableNode('query_handler')->end()
             ->scalarNode('form_theme')->end()
             ->scalarNode('template')->end()
+            ->variableNode('template_vars')->end()
             ->scalarNode('parent')->end()
             ->variableNode('column_value_renderer')
             ->beforeNormalization()->always($this->serviceResolver)->end()
@@ -137,6 +138,7 @@ class Configuration implements ConfigurationInterface
     {
         $columnDefinition
             ->scalarNode('template')->end()
+            ->variableNode('template_vars')->end()
             ->scalarNode('sort_column')->end()
             ->scalarNode('property_path')->end()
             ->scalarNode('label')->end()
