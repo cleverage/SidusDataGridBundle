@@ -39,9 +39,11 @@
 
 {% block datagrid_actions %}
     <div class="datagrid-actions">
-        <div class="pull-right">
-            {{ pagerfanta(pager, 'twitter_bootstrap3') }}
-        </div>
+        {% if pager.nbPages > 1 %}
+            <div class="pull-right">
+                {{ pagerfanta(pager, 'twitter_bootstrap3') }}
+            </div>
+        {% endif %}
         <div class="btn-group">
             {% for action in datagrid.formView.actions %}
                 {{ form_widget(action) }}

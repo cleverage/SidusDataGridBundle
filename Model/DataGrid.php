@@ -74,7 +74,6 @@ class DataGrid
      * @param array  $configuration
      *
      * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
-     * @throws \TypeError
      */
     public function __construct(string $code, array $configuration)
     {
@@ -360,13 +359,13 @@ class DataGrid
     }
 
     /**
-     * @param Request $request
+     * @param array $data
      *
      * @throws \Exception
      */
-    public function handleArray(Request $request): void
+    public function handleArray(array $data): void
     {
-        $this->queryHandler->handleArray($request);
+        $this->queryHandler->handleArray($data);
     }
 
     /**
@@ -387,7 +386,7 @@ class DataGrid
      */
     public function setActionParameters($action, array $parameters): void
     {
-        if ($action === 'submit_button') {
+        if ('submit_button' === $action) {
             $this->setSubmitButton(
                 array_merge(
                     $this->getSubmitButton(),
@@ -399,7 +398,7 @@ class DataGrid
 
             return;
         }
-        if ($action === 'reset_button') {
+        if ('reset_button' === $action) {
             $this->setResetButton(
                 array_merge(
                     $this->getResetButton(),
@@ -429,7 +428,11 @@ class DataGrid
      */
     protected function buildFilterActions(FormBuilderInterface $builder): void
     {
-        if (\count($this->getQueryHandler()->getConfiguration()->getFilters()) > 0) {
+        $visibleFilterCount = 0;
+        foreach ($this->getQueryHandler()->getConfiguration()->getFilters() as $filter) {
+            $filter->getOption('hidden') ?: $visibleFilterCount++;
+        }
+        if ($visibleFilterCount > 0) {
             $this->buildResetAction($builder);
             $this->buildSubmitAction($builder);
         }
@@ -499,7 +502,6 @@ class DataGrid
      * @param array  $columnConfiguration
      *
      * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
-     * @throws \TypeError
      */
     protected function createColumn(string $key, array $columnConfiguration): void
     {
