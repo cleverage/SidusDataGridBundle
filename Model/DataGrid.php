@@ -206,10 +206,15 @@ class DataGrid
 
     /**
      * @param Column $column
+     * @param int    $index
      */
-    public function addColumn(Column $column): void
+    public function addColumn(Column $column, int $index = null): void
     {
-        $this->columns[] = $column;
+        if (null === $index) {
+            $this->columns[] = $column;
+        } else {
+            array_splice($this->columns, $index, 0, [$column]);
+        }
     }
 
     /**
