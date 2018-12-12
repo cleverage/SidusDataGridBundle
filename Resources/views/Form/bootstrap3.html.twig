@@ -39,7 +39,7 @@
             {% set uri = path(route, route_parameters) %}
         {% endif %}
         <a href="{{ uri }}" {{ block('button_attributes') }}>
-            {{ label|trans({}, translation_domain)|raw }}
+            {{ prefix|default() }}{{ label|trans({}, translation_domain)|raw }}{{ suffix|default() }}
         </a>
     {% endspaceless %}
 {% endblock %}
