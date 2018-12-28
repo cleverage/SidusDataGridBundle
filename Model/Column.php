@@ -268,6 +268,6 @@ class Column
      */
     public function renderLabel(): string
     {
-        return $this->getLabelRenderer()->renderColumnLabel($this);
+        return ucfirst($this->getLabelRenderer()->renderColumnLabel($this));
     }
 }
