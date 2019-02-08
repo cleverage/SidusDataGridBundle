@@ -1,0 +1,5 @@
+services:
+    Sidus\DataGridBundle\Request\ParamConverter\DataGridParamConverter:
+        autowire: true
+        tags:
+            - { name: request.param_converter }
