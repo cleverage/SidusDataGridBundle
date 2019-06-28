@@ -44,11 +44,13 @@
                 {{ pagerfanta(pager, 'twitter_bootstrap3') }}
             </div>
         {% endif %}
-        <div class="btn-group">
-            {% for action in datagrid.formView.actions %}
-                {{ form_widget(action) }}
-            {% endfor %}
-        </div>
+        {% if not disabled|default(false) %}
+            <div class="btn-group">
+                {% for action in datagrid.formView.actions %}
+                    {{ form_widget(action) }}
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 
