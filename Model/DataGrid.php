@@ -10,6 +10,7 @@
 
 namespace Sidus\DataGridBundle\Model;
 
+use LogicException;
 use Pagerfanta\Exception\InvalidArgumentException;
 use Sidus\DataGridBundle\Form\Type\LinkType;
 use Sidus\DataGridBundle\Renderer\ColumnLabelRendererInterface;
@@ -22,6 +23,8 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Traversable;
+use UnexpectedValueException;
 
 /**
  * Handle a datagrid configuration
@@ -72,8 +75,6 @@ class DataGrid
     /**
      * @param string $code
      * @param array  $configuration
-     *
-     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
      */
     public function __construct(string $code, array $configuration)
     {
@@ -236,14 +237,14 @@ class DataGrid
     /**
      * @param string $action
      *
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      *
      * @return array
      */
     public function getAction($action): array
     {
         if (!$this->hasAction($action)) {
-            throw new \UnexpectedValueException("No action with code: '{$action}'");
+            throw new UnexpectedValueException("No action with code: '{$action}'");
         }
 
         return $this->actions[$action];
@@ -309,21 +310,21 @@ class DataGrid
     }
 
     /**
-     * @throws \LogicException
+     * @throws LogicException
      *
      * @return FormInterface
      */
     public function getForm(): FormInterface
     {
         if (!$this->form) {
-            throw new \LogicException('You must first call buildForm()');
+            throw new LogicException('You must first call buildForm()');
         }
 
         return $this->form;
     }
 
     /**
-     * @throws \LogicException
+     * @throws LogicException
      *
      * @return FormView
      */
@@ -339,8 +340,6 @@ class DataGrid
     /**
      * @param FormBuilderInterface $builder
      *
-     * @throws \Exception
-     *
      * @return FormInterface
      */
     public function buildForm(FormBuilderInterface $builder): FormInterface
@@ -355,8 +354,6 @@ class DataGrid
 
     /**
      * @param Request $request
-     *
-     * @throws \Exception
      */
     public function handleRequest(Request $request): void
     {
@@ -365,8 +362,6 @@ class DataGrid
 
     /**
      * @param array $data
-     *
-     * @throws \Exception
      */
     public function handleArray(array $data): void
     {
@@ -376,7 +371,7 @@ class DataGrid
     /**
      * @throws InvalidArgumentException
      *
-     * @return array|\Traversable
+     * @return array|Traversable
      */
     public function getPager()
     {
@@ -387,7 +382,7 @@ class DataGrid
      * @param string $action
      * @param array  $parameters
      *
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     public function setActionParameters($action, array $parameters): void
     {
@@ -428,14 +423,12 @@ class DataGrid
 
     /**
      * @param FormBuilderInterface $builder
-     *
-     * @throws \Exception
      */
     protected function buildFilterActions(FormBuilderInterface $builder): void
     {
         $visibleFilterCount = 0;
         foreach ($this->getQueryHandler()->getConfiguration()->getFilters() as $filter) {
-            $filter->getOption('hidden') ?: $visibleFilterCount++;
+            $filter->getOption('hidden') ?: ++$visibleFilterCount;
         }
         if ($visibleFilterCount > 0) {
             $this->buildResetAction($builder);
@@ -445,8 +438,6 @@ class DataGrid
 
     /**
      * @param FormBuilderInterface $builder
-     *
-     * @throws \Exception
      */
     protected function buildResetAction(FormBuilderInterface $builder): void
     {
@@ -464,8 +455,6 @@ class DataGrid
 
     /**
      * @param FormBuilderInterface $builder
-     *
-     * @throws \Exception
      */
     protected function buildSubmitAction(FormBuilderInterface $builder): void
     {
@@ -505,8 +494,6 @@ class DataGrid
     /**
      * @param string $key
      * @param array  $columnConfiguration
-     *
-     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
      */
     protected function createColumn(string $key, array $columnConfiguration): void
     {

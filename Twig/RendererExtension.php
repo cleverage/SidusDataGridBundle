@@ -12,24 +12,27 @@ namespace Sidus\DataGridBundle\Twig;
 
 use Sidus\DataGridBundle\Model\DataGrid;
 use Symfony\Component\Form\FormView;
-use Twig_Environment;
-use Twig_Extension;
-use Twig_SimpleFunction;
+use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Render values inside the Twig engine
  *
  * @author Vincent Chalnot <vincent@sidus.fr>
  */
-class RendererExtension extends Twig_Extension
+class RendererExtension extends AbstractExtension
 {
-    /** @var Twig_Environment */
+    /** @var Environment */
     protected $twig;
 
     /**
-     * @param Twig_Environment $twig
+     * @param Environment $twig
      */
-    public function __construct(Twig_Environment $twig)
+    public function __construct(Environment $twig)
     {
         $this->twig = $twig;
     }
@@ -40,12 +43,12 @@ class RendererExtension extends Twig_Extension
     public function getFunctions(): array
     {
         return [
-            new Twig_SimpleFunction(
+            new TwigFunction(
                 'render_datagrid',
                 [$this, 'renderDataGrid'],
                 ['is_safe' => ['html']]
             ),
-            new Twig_SimpleFunction(
+            new TwigFunction(
                 'get_filter_columns',
                 [$this, 'getFilterColumns'],
                 ['is_safe' => ['html']]
@@ -57,9 +60,9 @@ class RendererExtension extends Twig_Extension
      * @param DataGrid $dataGrid
      * @param array    $viewParameters
      *
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      *
      * @return string
      */

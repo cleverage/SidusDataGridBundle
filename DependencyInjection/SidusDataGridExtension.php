@@ -17,6 +17,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use UnexpectedValueException;
+use function is_array;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -32,8 +33,6 @@ class SidusDataGridExtension extends SidusBaseExtension
 
     /**
      * {@inheritdoc}
-     *
-     * @throws \Exception
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -54,8 +53,6 @@ class SidusDataGridExtension extends SidusBaseExtension
      *
      * @param string $code
      * @param array  $dataGridConfiguration
-     *
-     * @throws \Exception
      *
      * @return array
      */
@@ -90,7 +87,7 @@ class SidusDataGridExtension extends SidusBaseExtension
 
         if (isset($dataGridConfiguration['query_handler'])) {
             // Allow either a service or a direct configuration for filters
-            if (\is_array($dataGridConfiguration['query_handler'])) {
+            if (is_array($dataGridConfiguration['query_handler'])) {
                 $dataGridConfiguration['query_handler'] = $this->finalizeFilterConfiguration(
                     $code,
                     $dataGridConfiguration['query_handler']

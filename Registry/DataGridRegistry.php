@@ -11,6 +11,9 @@
 namespace Sidus\DataGridBundle\Registry;
 
 use Sidus\DataGridBundle\Model\DataGrid;
+use Sidus\FilterBundle\Exception\MissingFilterException;
+use Sidus\FilterBundle\Exception\MissingQueryHandlerException;
+use Sidus\FilterBundle\Exception\MissingQueryHandlerFactoryException;
 use Sidus\FilterBundle\Registry\QueryHandlerRegistry;
 use UnexpectedValueException;
 
@@ -58,11 +61,9 @@ class DataGridRegistry
     /**
      * @param string $code
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
-     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerFactoryException
-     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerException
-     * @throws \Sidus\FilterBundle\Exception\MissingFilterException
-     * @throws \UnexpectedValueException
+     * @throws MissingQueryHandlerFactoryException
+     * @throws MissingQueryHandlerException
+     * @throws MissingFilterException
      *
      * @return DataGrid
      */
@@ -88,11 +89,9 @@ class DataGridRegistry
     /**
      * @param string $code
      *
-     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
-     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerFactoryException
-     * @throws \Sidus\FilterBundle\Exception\MissingQueryHandlerException
-     * @throws \Sidus\FilterBundle\Exception\MissingFilterException
-     * @throws \UnexpectedValueException
+     * @throws MissingQueryHandlerFactoryException
+     * @throws MissingQueryHandlerException
+     * @throws MissingFilterException
      *
      * @return DataGrid
      */

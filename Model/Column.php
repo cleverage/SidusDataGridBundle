@@ -56,9 +56,6 @@ class Column
      * @param string   $code
      * @param DataGrid $dataGrid
      * @param array    $options
-     *
-     * @throws \Symfony\Component\PropertyAccess\Exception\ExceptionInterface
-     * @throws \TypeError
      */
     public function __construct($code, DataGrid $dataGrid, array $options = [])
     {

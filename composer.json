@@ -22,7 +22,16 @@
         }
     },
     "require": {
-        "sidus/filter-bundle": "dev-v2.0-dev",
+        "twig/twig": "~2.0",
+        "symfony/dependency-injection": "~3.0|~4.0",
+        "symfony/http-kernel": "~3.0|~4.0",
+        "symfony/config": "~3.0|~4.0",
+        "symfony/form": "~3.0|~4.0",
+        "symfony/options-resolver": "~3.0|~4.0",
+        "symfony/property-access": "~3.0|~4.0",
+        "symfony/http-foundation": "~3.0|~4.0",
+        "symfony/translation": "~3.0|~4.0",
+        "sidus/filter-bundle": "3.0.*|dev-v3.0-dev",
         "sidus/base-bundle": "~1.0"
     }
 }

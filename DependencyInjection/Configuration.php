@@ -10,6 +10,8 @@
 
 namespace Sidus\DataGridBundle\DependencyInjection;
 
+use Closure;
+use RuntimeException;
 use Sidus\DataGridBundle\Renderer\ColumnLabelRendererInterface;
 use Sidus\DataGridBundle\Renderer\ColumnValueRendererInterface;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
@@ -31,7 +33,7 @@ class Configuration implements ConfigurationInterface
     /** @var string */
     protected $root;
 
-    /** @var \Closure */
+    /** @var Closure */
     protected $serviceResolver;
 
     /**
@@ -40,14 +42,14 @@ class Configuration implements ConfigurationInterface
     public function __construct($root = 'sidus_data_grid')
     {
         $this->root = $root;
-        $this->serviceResolver = function ($reference) {
+        $this->serviceResolver = static function ($reference) {
             return new Reference(ltrim($reference, '@'));
         };
     }
 
     /**
      * {@inheritdoc}
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function getConfigTreeBuilder()
     {
@@ -75,7 +77,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      *
      * @return NodeDefinition
      */

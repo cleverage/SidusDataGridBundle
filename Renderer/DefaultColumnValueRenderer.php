@@ -10,9 +10,16 @@
 
 namespace Sidus\DataGridBundle\Renderer;
 
+use DateTimeInterface;
+use IntlDateFormatter;
+use NumberFormatter;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_iterable;
 
 /**
  * Render values inside the Twig engine
@@ -41,8 +48,6 @@ class DefaultColumnValueRenderer implements ColumnValueRendererInterface
      * @param mixed $value
      * @param array $options
      *
-     * @throws \Exception
-     *
      * @return string
      */
     public function renderValue($value, array $options = []): string
@@ -51,14 +56,14 @@ class DefaultColumnValueRenderer implements ColumnValueRendererInterface
         $this->configureOptions($resolver);
         $options = $resolver->resolve($options);
 
-        if ($value instanceof \DateTimeInterface) {
+        if ($value instanceof DateTimeInterface) {
             if (null !== $options['date_format']) {
                 return (string) $value->format($options['date_format']);
             }
             if ($value->format('H:i') === '00:00') {
-                $options['time_type'] = \IntlDateFormatter::NONE;
+                $options['time_type'] = IntlDateFormatter::NONE;
             }
-            $dateFormatter = new \IntlDateFormatter(
+            $dateFormatter = new IntlDateFormatter(
                 $this->translator->getLocale(),
                 $options['date_type'],
                 $options['time_type']
@@ -66,10 +71,10 @@ class DefaultColumnValueRenderer implements ColumnValueRendererInterface
 
             return (string) $dateFormatter->format($value);
         }
-        if (\is_int($value)) {
+        if (is_int($value)) {
             return (string) $value;
         }
-        if (\is_float($value)) {
+        if (is_float($value)) {
             if (null !== $options['decimals'] || null !== $options['dec_point'] || null !== $options['thousands_sep']) {
                 return number_format(
                     $value,
@@ -78,11 +83,11 @@ class DefaultColumnValueRenderer implements ColumnValueRendererInterface
                     $options['thousands_sep'] ?: ','
                 );
             }
-            $numberFormatter = new \NumberFormatter($this->translator->getLocale(), $options['number_format']);
+            $numberFormatter = new NumberFormatter($this->translator->getLocale(), $options['number_format']);
 
             return (string) $numberFormatter->format($value);
         }
-        if (\is_iterable($value)) {
+        if (is_iterable($value)) {
             $items = [];
             /** @noinspection ForeachSourceInspection */
             foreach ($value as $key => $item) {
@@ -95,7 +100,7 @@ class DefaultColumnValueRenderer implements ColumnValueRendererInterface
 
             return implode($options['array_glue'], $items);
         }
-        if (\is_bool($value)) {
+        if (is_bool($value)) {
             if ($options['bool_use_translator']) {
                 return (string) $this->translator->trans(
                     $value ? $options['bool_true'] : $options['bool_false']
@@ -118,9 +123,9 @@ class DefaultColumnValueRenderer implements ColumnValueRendererInterface
                 'object' => null,
                 'column' => null,
                 'date_format' => null,
-                'date_type' => \IntlDateFormatter::MEDIUM,
-                'time_type' => \IntlDateFormatter::SHORT,
-                'number_format' => \NumberFormatter::DECIMAL,
+                'date_type' => IntlDateFormatter::MEDIUM,
+                'time_type' => IntlDateFormatter::SHORT,
+                'number_format' => NumberFormatter::DECIMAL,
                 'decimals' => null,
                 'dec_point' => null,
                 'thousands_sep' => null,

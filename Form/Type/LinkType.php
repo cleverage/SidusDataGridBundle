@@ -17,6 +17,7 @@ use Symfony\Component\OptionsResolver\Exception\AccessException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use UnexpectedValueException;
 
 /**
  * Fake form element to display a link
@@ -42,7 +43,7 @@ class LinkType extends AbstractType
      *
      * @throws AccessException
      * @throws UndefinedOptionsException
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
      */
     public function configureOptions(OptionsResolver $resolver)
     {
@@ -59,9 +60,9 @@ class LinkType extends AbstractType
         $resolver->setAllowedTypes('route_parameters', 'array');
         $resolver->setNormalizer(
             'route',
-            function (Options $options, $value) {
+            static function (Options $options, $value) {
                 if (!($value xor $options['uri'])) {
-                    throw new \UnexpectedValueException("You must specify either a 'route' or an 'uri' option");
+                    throw new UnexpectedValueException("You must specify either a 'route' or an 'uri' option");
                 }
 
                 return $value;
