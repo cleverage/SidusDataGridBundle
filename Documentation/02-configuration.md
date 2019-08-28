@@ -53,7 +53,7 @@ sidus_data_grid:
     default_form_theme: ~
 
     # Change the default template for all datagrids
-    default_datagrid_template: SidusDataGridBundle:DataGrid:bootstrap4.html.twig
+    default_datagrid_template: '@SidusDataGrid/DataGrid/bootstrap4.html.twig'
 
     # Change the default value renderer for all datagrids
     default_column_value_renderer: Sidus\DataGridBundle\Renderer\ColumnValueRendererInterface

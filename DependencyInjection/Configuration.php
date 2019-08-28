@@ -59,7 +59,7 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('default_form_theme')->defaultNull()->end()
             ->scalarNode('default_datagrid_template')
-            ->defaultValue('SidusDataGridBundle:DataGrid:bootstrap4.html.twig')
+            ->defaultValue('@SidusDataGrid/DataGrid/bootstrap4.html.twig')
             ->end()
             ->variableNode('default_column_value_renderer')
             ->defaultValue(new Reference(ColumnValueRendererInterface::class))
