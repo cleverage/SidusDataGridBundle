@@ -51,7 +51,7 @@ class Configuration implements ConfigurationInterface
      * {@inheritdoc}
      * @throws RuntimeException
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root($this->root);
@@ -104,11 +104,12 @@ class Configuration implements ConfigurationInterface
     /**
      * @param NodeBuilder $dataGridDefinition
      */
-    protected function appendDataGridDefinition(NodeBuilder $dataGridDefinition)
+    protected function appendDataGridDefinition(NodeBuilder $dataGridDefinition): void
     {
         $columnDefinition = $dataGridDefinition
             ->variableNode('query_handler')->end()
             ->scalarNode('form_theme')->end()
+            ->variableNode('form_options')->end()
             ->scalarNode('template')->end()
             ->variableNode('template_vars')->end()
             ->scalarNode('parent')->end()
@@ -136,7 +137,7 @@ class Configuration implements ConfigurationInterface
     /**
      * @param NodeBuilder $columnDefinition
      */
-    protected function appendColumnDefinition(NodeBuilder $columnDefinition)
+    protected function appendColumnDefinition(NodeBuilder $columnDefinition): void
     {
         $columnDefinition
             ->scalarNode('template')->end()

@@ -60,6 +60,9 @@ class DataGrid
     /** @var FormInterface */
     protected $form;
 
+    /** @var array */
+    protected $formOptions = [];
+
     /** @var FormView */
     protected $formView;
 
@@ -321,6 +324,22 @@ class DataGrid
         }
 
         return $this->form;
+    }
+
+    /**
+     * @return array
+     */
+    public function getFormOptions(): array
+    {
+        return $this->formOptions;
+    }
+
+    /**
+     * @param array $formOptions
+     */
+    public function setFormOptions(array $formOptions): void
+    {
+        $this->formOptions = $formOptions;
     }
 
     /**
