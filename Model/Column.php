@@ -236,6 +236,20 @@ class Column
     }
 
     /**
+     * Get column value for a given object
+     *
+     * @param mixed $object
+     *
+     * @return string
+     */
+    public function getValue($object): string
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
+
+        return $accessor->getValue($object, $this->getPropertyPath());
+    }
+
+    /**
      * Render column for a given result
      *
      * @param mixed $object
@@ -245,19 +259,20 @@ class Column
      */
     public function renderValue($object, array $options = []): string
     {
-        $options = array_merge(
-            ['column' => $this, 'object' => $object],
-            $this->getFormattingOptions(),
-            $options
-        );
-        $accessor = PropertyAccess::createPropertyAccessor();
         try {
-            $value = $accessor->getValue($object, $this->getPropertyPath());
+            $value = $this->getValue($object);
         } catch (UnexpectedTypeException $e) {
             return '';
         }
 
-        return $this->getValueRenderer()->renderValue($value, $options);
+        return $this->getValueRenderer()->renderValue(
+            $value,
+            array_merge(
+                ['column' => $this, 'object' => $object],
+                $this->getFormattingOptions(),
+                $options
+            )
+        );
     }
 
     /**
