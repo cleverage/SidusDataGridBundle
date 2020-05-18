@@ -240,9 +240,9 @@ class Column
      *
      * @param mixed $object
      *
-     * @return string
+     * @return mixed
      */
-    public function getValue($object): string
+    public function getValue($object)
     {
         $accessor = PropertyAccess::createPropertyAccessor();
 
