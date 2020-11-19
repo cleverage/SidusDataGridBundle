@@ -1,5 +1,5 @@
 {
-    "name": "sidus/datagrid-bundle",
+    "name": "cleverage/datagrid-bundle",
     "description": "Extension for sidus/filter-bundle to easily build a full datagrid based on yml configuration",
     "keywords": [
         "datagrid",
@@ -16,22 +16,22 @@
             "role": "Developer"
         }
     ],
+    "require": {
+        "php": "^7.4",
+        "cleverage/filter-bundle": "dev-master",
+        "sidus/base-bundle": "^1.0",
+        "sensio/framework-extra-bundle": "^5.0",
+        "twig/twig": "^2.0"
+    },
     "autoload": {
         "psr-4": {
-            "Sidus\\DataGridBundle\\": ""
+            "Sidus\\DataGridBundle\\": "src/"
         }
     },
-    "require": {
-        "twig/twig": "~2.0",
-        "symfony/dependency-injection": "~3.0|~4.0",
-        "symfony/http-kernel": "~3.0|~4.0",
-        "symfony/config": "~3.0|~4.0",
-        "symfony/form": "~3.0|~4.0",
-        "symfony/options-resolver": "~3.0|~4.0",
-        "symfony/property-access": "~3.0|~4.0",
-        "symfony/http-foundation": "~3.0|~4.0",
-        "symfony/translation": "~3.0|~4.0",
-        "sidus/filter-bundle": "3.0.*|dev-v3.0-dev",
-        "sidus/base-bundle": "~1.0"
+    "require-dev": {
+        "johnkrovitch/test-pack": "^1.1"
+    },
+    "config": {
+        "bin-dir": "bin/"
     }
 }
