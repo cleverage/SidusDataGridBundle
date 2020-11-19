@@ -18,6 +18,6 @@ That being said, if you have only a few datagrids and need to heavily customize 
 
 ## Table of content
 
- - [01 - Installation](Documentation/01-install.md)
- - [02 - Configuration](Documentation/02-configuration.md)
- - [03 - Usage](Documentation/03-usage.md)
+ - [01 - Installation](docs/01-install.md)
+ - [02 - Configuration](docs/02-configuration.md)
+ - [03 - Usage](docs/03-usage.md)
